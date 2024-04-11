@@ -359,10 +359,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" /> 
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -421,10 +422,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -478,10 +480,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" /> 
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -540,10 +543,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -597,10 +601,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -655,10 +660,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[2].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[2].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration3__c)}" /> 
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -720,6 +726,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" /> 
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -782,6 +789,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -840,6 +848,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" /> 
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -902,6 +911,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -960,6 +970,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1018,6 +1029,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration3__c)}" /> 
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1076,10 +1088,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1138,6 +1151,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1195,10 +1209,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1257,6 +1272,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1315,6 +1331,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1372,10 +1389,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1434,6 +1452,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1492,6 +1511,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1550,6 +1570,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration3__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1608,10 +1629,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1665,10 +1687,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1728,6 +1751,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1786,10 +1810,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1843,10 +1868,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1906,6 +1932,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -1964,6 +1991,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2022,10 +2050,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2079,10 +2108,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2142,6 +2172,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2200,6 +2231,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2258,6 +2290,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration3__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2316,10 +2349,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2373,10 +2407,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2431,10 +2466,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[2].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[2].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration3__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2492,6 +2528,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2551,10 +2588,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2608,10 +2646,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2666,10 +2705,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[2].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[2].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration3__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2729,6 +2769,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2787,6 +2828,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2845,10 +2887,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[0].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[0].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[0].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration1__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2902,10 +2945,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[1].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[1].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[1].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration2__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -2960,10 +3004,11 @@
                                     <span>TURISMO:</span> <br />
                                     <span>Marca:</span> {!listaCoches[2].Name}. <br />
                                     <span>Modelo:</span> {!listaCoches[2].LSO_fld_modelCar__c}. <br />
-                                    <span> Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
+                                    <span>Matrícula:</span> {!listaCoches[2].LSO_fld_carRegistrationNumber__c} <br />
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_carChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)), TEXT(DAY(document.LSO_fld_dateCarRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateCarRegistration3__c)))}/{!YEAR(document.LSO_fld_dateCarRegistration3__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -3023,6 +3068,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber1__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration1__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration1__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration1__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -3081,6 +3127,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber2__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration2__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration2__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration2__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
@@ -3139,6 +3186,7 @@
                                     <span>Nº Bastidor:</span> {!document.LSO_fld_motoChassisNumber3__c} <br />
                                     <span>Fecha de matriculación:</span> <apex:outputText value="{!CASE(LEN(TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)), TEXT(DAY(document.LSO_fld_dateMotoRegistration3__c)))}/{!CASE(LEN(TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c))), 1, '0' + TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)), TEXT(MONTH(document.LSO_fld_dateMotoRegistration3__c)))}/{!YEAR(document.LSO_fld_dateMotoRegistration3__c)}" />
                                     <br />
+                                    <span>Titularidad:</span> <br />
                                 </p>
                             </td>
 
