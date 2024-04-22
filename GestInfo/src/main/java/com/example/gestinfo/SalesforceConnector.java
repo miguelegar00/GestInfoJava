@@ -1,40 +1,31 @@
 package com.example.gestinfo;
 
-import com.force.api.ApiConfig;
-import com.force.api.Auth;
-import com.force.api.QueryResult;
-import com.force.api.RequestException;
-import com.force.api.RestConnection;
+import com.salesforce.rest.SalesforceClient;
+import com.salesforce.rest.User;
 
 public class SalesforceConnector {
+
     public static void main(String[] args) {
-        String username = "tu_usuario_de_salesforce";
-        String password = "tu_contraseña_de_salesforce";
-        String securityToken = "tu_token_de_seguridad";
 
-        String clientId = "tu_client_id";
-        String clientSecret = "tu_client_secret";
+        // Reemplaza con tus credenciales de Salesforce
+        String username = "tuNombreDeUsuario";
+        String password = "tuContraseña";
+        String securityToken = "tuTokenDeSeguridad";
+        String endpoint = "https://tuOrganizacion.salesforce.com";
 
-        try {
-            // Autenticarse con Salesforce
-            Auth auth = new Auth();
-            String accessToken = auth.getAccessToken(username, password, clientId, clientSecret, securityToken);
-            ApiConfig config = new ApiConfig().setAccessToken(accessToken);
+        // Conectarse a Salesforce
+        SalesforceClient client = new SalesforceClient(endpoint, username, password, securityToken);
 
-            // Realizar una consulta SOQL para obtener datos
-            RestConnection connection = new RestConnection(config);
-            QueryResult<Object> result = connection.query("SELECT Id, Name FROM Account LIMIT 10");
+        // Consultar datos de usuario
+        String query = "SELECT Id, Name, Email FROM User";
+        List<User> users = client.query(query, User.class);
 
-            // Procesar los resultados
-            if (result.isSuccess()) {
-                for (Object record : result.getRecords()) {
-                    System.out.println(record);
-                }
-            } else {
-                System.err.println("Error al ejecutar la consulta: " + result.getStatusCode() + " " + result.getError());
-            }
-        } catch (RequestException e) {
-            System.err.println("Error al conectarse a Salesforce: " + e.getMessage());
+        // Procesar los resultados de la consulta
+        for (User user : users) {
+            System.out.println("ID: " + user.getId());
+            System.out.println("Nombre: " + user.getName());
+            System.out.println("Correo electrónico: " + user.getEmail());
+            System.out.println("----");
         }
     }
 }
