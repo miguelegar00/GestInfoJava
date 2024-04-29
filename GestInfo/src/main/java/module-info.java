@@ -6,7 +6,6 @@ module com.example.gestinfo {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
-
     requires org.apache.httpcomponents.httpclient;
     requires org.json;
     requires org.apache.httpcomponents.httpcore;
