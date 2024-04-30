@@ -29,6 +29,7 @@ public class SalesforceOAuth extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         // Configurar el layout principal
         VBox root = new VBox();
         root.setPadding(new Insets(10));
@@ -84,6 +85,7 @@ public class SalesforceOAuth extends Application {
     }
 
     private void executeAndDisplayResults() throws IOException {
+        
         // URL de la consulta
         String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,Name+FROM+Account";
 
