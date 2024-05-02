@@ -1,15 +1,14 @@
 package com.example.gestinfo;
 
 import java.io.IOException;
+import java.util.function.ObjDoubleConsumer;
 
 public class OpenUrlExample {
 
     public static void main(String[] args) {
-        String url = "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoConMasa?id=";
-        openUrlInBrowser(url);
     }
 
-    private static void openUrlInBrowser(String url) {
+    public static void openUrlInBrowser(String url) {
         String os = System.getProperty("os.name").toLowerCase();
         Runtime rt = Runtime.getRuntime();
 
@@ -32,10 +31,5 @@ public class OpenUrlExample {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void openUrlWithId(String id) {
-        String url = "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoConMasa?id=" + id;
-        openUrlInBrowser(url);
     }
 }
