@@ -271,16 +271,17 @@ public class SalesforceOAuth extends Application {
         TextField phoneField = new TextField();
         ComboBox<String> clienteDeComboBox = new ComboBox<>();
         ComboBox<String> genderComboBox = new ComboBox<>(); // Cambiar a ComboBox
-    
+        ComboBox<String> recordTypeComboBox = new ComboBox<>(); // ComboBox para RecordType
+        
         // Agregar opciones al ComboBox de Cliente de
         clienteDeComboBox.getItems().addAll("LSO", "Programa");
-    
+        
+        // Agregar opciones al ComboBox de Género
         genderComboBox.getItems().addAll("Don", "Do\u00F1a");
-    
-    
-        // Asignar el valor del Record Type
-        String recordTypeId = "0127Q000000yrwrQAA";
-    
+        
+        // Agregar opciones al ComboBox de RecordType
+        recordTypeComboBox.getItems().addAll("Cliente potencial", "Cliente");
+        
         // Crear un botón "Crear"
         Button crearButton = new Button("Crear");
         crearButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
@@ -292,36 +293,43 @@ public class SalesforceOAuth extends Application {
             String phone = phoneField.getText();
             String clienteDe = clienteDeComboBox.getValue();
             String gender = genderComboBox.getValue(); // Obtener el valor seleccionado del ComboBox
-    
+            String recordType = recordTypeComboBox.getValue(); // Obtener el valor seleccionado del ComboBox
+        
+            // Verificar que se haya seleccionado un RecordType
+            if (recordType == null || recordType.isEmpty()) {
+                showError("Por favor, seleccione un Record Type.");
+                return;
+            }
+        
             try {
                 // Construir la URL del endpoint de Salesforce para crear una nueva cuenta
                 String createUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Account/";
-    
+        
                 String data = "{\"FirstName\": \"" + firstName + "\", " +
                         "\"LastName\": \"" + lastName + "\", " +
                         "\"PersonEmail\": \"" + email + "\", " +
-                        "\"RecordTypeId\": \"" + recordTypeId + "\", " +
+                        "\"RecordTypeId\": \"" + getRecordTypeId(recordType) + "\", " +
                         "\"Phone\": \"" + phone + "\", " +
                         "\"Cliente_de__c\": \"" + clienteDe + "\", " +
                         "\"Gender__pc\": \"" + gender.replace("ñ", "\\u00F1") + "\"}";
-    
-    
+        
+        
                 // Ejecutar la solicitud POST a Salesforce para crear la nueva cuenta
                 SalesforceOAuth.executePostRequest(createUrl, data);
-    
+        
                 // Actualizar la tabla para reflejar los cambios
                 executeAndDisplayResults();
-    
+        
                 // Cerrar la ventana de creación después de crear la nueva cuenta en Salesforce
                 Stage stage = (Stage) crearButton.getScene().getWindow();
                 stage.close();
-    
+        
             } catch (IOException e) {
                 e.printStackTrace();
                 showError("Error al crear la cuenta: " + e.getMessage());
             }
         });
-    
+        
         // Crear el diseño del formulario de creación
         VBox createRoot = new VBox();
         createRoot.setPadding(new Insets(20));
@@ -338,23 +346,37 @@ public class SalesforceOAuth extends Application {
                 new Label("Cliente de:"),
                 clienteDeComboBox,
                 new Label("Género:"), // Cambiar a ComboBox
-                genderComboBox
+                genderComboBox,
+                new Label("Record Type:"),
+                recordTypeComboBox
         );
-    
+        
         // Crear un contenedor para el botón "Crear"
         HBox buttonContainer = new HBox(crearButton);
         buttonContainer.setAlignment(Pos.CENTER);
-    
+        
         // Agregar el botón "Crear" al diseño del formulario de creación
         createRoot.getChildren().add(buttonContainer);
-    
+        
         // Configurar la escena y mostrar la ventana de creación
-        Scene createScene = new Scene(createRoot, 400, 580);
+        Scene createScene = new Scene(createRoot, 400, 640);
         Stage createStage = new Stage();
         createStage.setScene(createScene);
         createStage.setTitle("Crear nueva cuenta");
         createStage.show();
     }
+    
+    // Método para obtener el ID del RecordType basado en el nombre seleccionado
+    private String getRecordTypeId(String recordTypeName) {
+        if (recordTypeName.equals("Cliente potencial")) {
+            return "0127Q000000yrwrQAA";
+        } else if (recordTypeName.equals("Cliente")) {
+            return "0127Q000000yrwqQAA";
+        }
+        return null; // Manejar otros casos según sea necesario
+    }
+    
+    
     
     
 
