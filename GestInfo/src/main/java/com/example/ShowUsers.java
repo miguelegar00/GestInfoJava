@@ -50,17 +50,8 @@ public class ShowUsers extends Application {
         Menu volverMenu = new Menu("Volver");
         MenuItem volverCuentasItem = new MenuItem("Volver a las cuentas");
         volverCuentasItem.setOnAction(event -> {
-            Stage stage = new Stage();
-            SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
-            try {
-                salesforceOAuth.start(stage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            // Obtener la ventana actual desde el ActionEvent
-            Stage currentStage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-            currentStage.close();
-
+            // Cerrar la ventana actual de ShowUsers
+            primaryStage.close();
         });
         volverMenu.getItems().add(volverCuentasItem);
 
@@ -173,7 +164,7 @@ public class ShowUsers extends Application {
 
     private static void executeAndDisplayResults() throws IOException {
         // URL de la consulta
-        String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true";
+        String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
 
         // Token de portador
         String bearerToken = "00DUB000001QzdZ!AQEAQBMCu7oCBBM_JhGnf2o2VpesC9PkuU1742rf2KtV9dHTDDAcmGTv3C3bcRDlrEe9hEhVQ49GghG3djc3R8e2grQkhbQA";
