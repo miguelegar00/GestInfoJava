@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class Inicio extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(@SuppressWarnings("exports") Stage primaryStage) {
         // Crear la imagen y el ImageView
         Image image = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/2560px-Salesforce.com_logo.svg.png");
         ImageView imageView = new ImageView(image);
