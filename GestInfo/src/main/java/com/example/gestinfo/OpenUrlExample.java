@@ -1,7 +1,6 @@
 package com.example.gestinfo;
 
 import java.io.IOException;
-import java.util.function.ObjDoubleConsumer;
 
 public class OpenUrlExample {
 

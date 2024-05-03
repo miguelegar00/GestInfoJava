@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 public class Inicio extends Application {
 
     @Override
+    @SuppressWarnings("exports")
     public void start(Stage primaryStage) {
         // Crear la imagen y el ImageView
         Image image = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/2560px-Salesforce.com_logo.svg.png");
@@ -30,9 +31,9 @@ public class Inicio extends Application {
         imagePane.setAlignment(Pos.CENTER);
 
         // Crear el botón "Iniciar" con estilo CSS personalizado
-        Button iniciarButton = new Button("Iniciar");
-        iniciarButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-color: transparent; -fx-border-radius: 5;");
-        iniciarButton.setOnAction(event -> {
+        Button accederButton = new Button("Acceder");
+        accederButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-color: transparent; -fx-border-radius: 5;");
+        accederButton.setOnAction(event -> {
             // Ejecutar la clase SalesforceOAuth
             SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
             try {
@@ -45,7 +46,7 @@ public class Inicio extends Application {
         });
 
         // Colocar el botón en la esquina inferior derecha y centrarlo horizontalmente
-        HBox buttonContainer = new HBox(iniciarButton);
+        HBox buttonContainer = new HBox(accederButton);
         buttonContainer.setAlignment(Pos.BOTTOM_CENTER);
         buttonContainer.setPadding(new Insets(10));
 

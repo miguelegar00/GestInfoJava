@@ -31,6 +31,7 @@ public class OpenUrlExampleFX extends Application {
     }
 
     @Override
+    @SuppressWarnings("exports")
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Generador de Documentos");
 
