@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -73,6 +75,12 @@ public class ShowUsers extends Application {
 
         // Crear el contenedor para el campo de búsqueda y el botón de restablecer
         HBox searchContainer = new HBox(10, searchField, resetButton);
+        searchContainer.setPrefWidth(350);
+        HBox.setHgrow(searchField, Priority.ALWAYS);
+        searchContainer.setAlignment(Pos.CENTER);
+        searchContainer.setPadding(new Insets(0, 10, 0, 10)); // Establecer un margen izquierdo y derecho de 10 píxeles
+
+
 
         // Crear la tabla para mostrar los IDs y los Names
         userTable = new TableView<>();
