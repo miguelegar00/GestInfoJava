@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -85,6 +86,43 @@ public class SalesforceOAuth extends Application {
     
         // Configurar la parte superior del BorderPane con el menú
         root.setTop(menuBar);
+
+        // Crear el campo de búsqueda
+        TextField searchField = new TextField();
+        searchField.setPromptText("Buscar por nombre");
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterAccounts(newValue));
+
+        // Crear el botón de restablecer
+        Button resetButton = new Button("Restablecer");
+        resetButton.setOnAction(event -> {
+            // Limpiar el campo de búsqueda y restablecer la tabla
+            searchField.clear();
+            try {
+                executeAndDisplayResults();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showError("Error al realizar la consulta: " + e.getMessage());
+            }
+        });
+
+        // Crear el contenedor para el campo de búsqueda y el botón de restablecer
+        // Crear el contenedor para el campo de búsqueda y el botón de restablecer
+        HBox searchContainer = new HBox(10, searchField, resetButton);
+        searchContainer.setPrefWidth(350);
+        HBox.setHgrow(searchField, Priority.ALWAYS);
+        searchContainer.setAlignment(Pos.CENTER);
+        searchContainer.setPadding(new Insets(0, 10, 10, 10)); // Establecer un margen izquierdo y derecho de 10 píxeles, y un margen inferior de 10 píxeles
+
+        // Agregar margen inferior al searchContainer
+        BorderPane.setMargin(searchContainer, new Insets(0, 0, 10, 0)); // Establecer un margen inferior de 10 píxeles
+
+
+        // Configurar la parte superior del BorderPane con el menú y el campo de búsqueda
+        VBox topContainer = new VBox(menuBar, searchContainer);
+        topContainer.setSpacing(10);
+        topContainer.setAlignment(Pos.CENTER);
+        root.setTop(topContainer);
+
     
         // Crear la tabla para mostrar los datos de las cuentas
         accountTable = new TableView<>();
@@ -147,6 +185,25 @@ public class SalesforceOAuth extends Application {
             return encodedString;
         }
     }
+
+    private void filterAccounts(String searchQuery) {
+        // Obtener la lista de cuentas actual de la tabla
+        ObservableList<Account> accounts = accountTable.getItems();
+        
+        // Crear una nueva lista para almacenar las cuentas filtradas
+        ObservableList<Account> filteredAccounts = FXCollections.observableArrayList();
+        
+        // Recorrer todas las cuentas y agregar aquellas cuyo nombre coincida con la búsqueda
+        for (Account account : accounts) {
+            if (account.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
+                filteredAccounts.add(account);
+            }
+        }
+        
+        // Actualizar la tabla con las cuentas filtradas
+        accountTable.setItems(filteredAccounts);
+    }
+    
 
     private void executeAndDisplayResults() throws IOException {
         // URL de la consulta
