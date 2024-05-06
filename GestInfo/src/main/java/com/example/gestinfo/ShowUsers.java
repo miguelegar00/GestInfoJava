@@ -1,4 +1,4 @@
-package com.example;
+package com.example.gestinfo;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -20,7 +21,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.example.gestinfo.SalesforceOAuth;
 
 public class ShowUsers extends Application {
 
@@ -31,7 +31,7 @@ public class ShowUsers extends Application {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void start(Stage primaryStage) {
+    public void start(@SuppressWarnings("exports") Stage primaryStage) {
         // Configurar el layout principal
         VBox root = new VBox();
         root.setSpacing(20);
@@ -108,14 +108,33 @@ public class ShowUsers extends Application {
         // Establecer la prioridad de crecimiento vertical de la tabla
         VBox.setVgrow(userTable, Priority.ALWAYS);
 
-        // Agregar el menú, el campo de búsqueda y la tabla al layout principal
-        root.getChildren().addAll(menuBar, searchContainer, userTable);
+        // Crear el botón de editar
+        Button editButton = new Button("Editar");
+        editButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
+
+        // Configurar el evento del botón de editar
+        editButton.setOnAction(event -> {
+            // Aquí puedes agregar la lógica para editar usuarios
+            // Por ejemplo, abrir una nueva ventana para editar el usuario seleccionado
+        });
+
+        // Crear un VBox para centrar verticalmente el botón debajo de la tabla
+        VBox buttonContainer = new VBox();
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.getChildren().add(editButton);
+
+        // Establecer el margen inferior del VBox
+        VBox.setMargin(buttonContainer, new Insets(0, 0, 10, 0)); // 10 píxeles de margen inferior
+
+        // Agregar el VBox que contiene el botón debajo de la tabla
+        root.getChildren().addAll(menuBar, searchContainer, userTable, buttonContainer);
 
         // Configurar la escena
         Scene scene = new Scene(root);
 
         // Maximizar la ventana
         primaryStage.setMaximized(true);
+        primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
 
         // Mostrar la ventana maximizada
         primaryStage.setScene(scene);
@@ -172,10 +191,10 @@ public class ShowUsers extends Application {
 
     private static void executeAndDisplayResults() throws IOException {
         // URL de la consulta
-        String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
+        String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId,CompanyName,Username,Email,Alias,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,LanguageLocaleKey+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
 
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQBMCu7oCBBM_JhGnf2o2VpesC9PkuU1742rf2KtV9dHTDDAcmGTv3C3bcRDlrEe9hEhVQ49GghG3djc3R8e2grQkhbQA";
+        String bearerToken = "00DUB000001QzdZ!AQEAQIeOdMCbNe61.RbJtBcenGc2EJTK.BeJ8PUcZY6oU4VJQ7OPNoXw2Bh3C_8kBHax_QiQelvn9sgyR44vnlAhKkCrdOTF";
 
         // Realizar la consulta
         String response = executeQuery(queryUrl, bearerToken);
@@ -267,18 +286,22 @@ public class ShowUsers extends Application {
             this.userRoleId.set(userRoleId);
         }
 
+        @SuppressWarnings("exports")
         public SimpleStringProperty idProperty() {
             return id;
         }
 
+        @SuppressWarnings("exports")
         public SimpleStringProperty firstNameProperty() {
             return firstName;
         }
 
+        @SuppressWarnings("exports")
         public SimpleStringProperty lastNameProperty() {
             return lastName;
         }
 
+        @SuppressWarnings("exports")
         public SimpleStringProperty userRoleIdProperty() {
             return userRoleId;
         }

@@ -58,6 +58,10 @@ public class Inicio extends Application {
         Scene scene = new Scene(root, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Soluciona Mi Deuda");
+
+        // Establecer el icono de la ventana
+        primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
+
         primaryStage.show();
     }
 
