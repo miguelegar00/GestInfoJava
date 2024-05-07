@@ -22,6 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.controlsfx.tools.Platform;
+
 public class ShowUsers extends Application {
 
     private static TableView<User> userTable;
@@ -97,13 +99,7 @@ public class ShowUsers extends Application {
 
         userTable.getColumns().addAll(firstNameColumn, lastNameColumn, userRoleIdColumn);
 
-        // Realizar la consulta y mostrar los resultados en la tabla
-        try {
-            executeAndDisplayResults();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showError("Error al realizar la consulta: " + e.getMessage());
-        }
+        executeAndDisplayResults(primaryStage);
 
         // Establecer la prioridad de crecimiento vertical de la tabla
         VBox.setVgrow(userTable, Priority.ALWAYS);
@@ -148,14 +144,6 @@ public class ShowUsers extends Application {
         }
     }
 
-    private static void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     private static String decodeString(String encodedString) {
         try {
             return java.net.URLDecoder.decode(encodedString, StandardCharsets.UTF_8.toString());
@@ -189,32 +177,46 @@ public class ShowUsers extends Application {
         }
     }
 
-    private static void executeAndDisplayResults() throws IOException {
-        // URL de la consulta
-        String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId,CompanyName,Username,Email,Alias,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,LanguageLocaleKey+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
-
-        // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQIeOdMCbNe61.RbJtBcenGc2EJTK.BeJ8PUcZY6oU4VJQ7OPNoXw2Bh3C_8kBHax_QiQelvn9sgyR44vnlAhKkCrdOTF";
-
-        // Realizar la consulta
-        String response = executeQuery(queryUrl, bearerToken);
-
-        // Procesar la respuesta y mostrar los IDs y los Names en la tabla
-        ObservableList<User> userList = FXCollections.observableArrayList();
-
-        Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"UserRoleId\"\\s*:\\s*\"(.*?)\"");
-        Matcher matcher = pattern.matcher(response);
-        while (matcher.find()) {
-            String id = matcher.group(1);
-            String firstName = decodeString(matcher.group(2));
-            String lastName = decodeString(matcher.group(3));
-            String userRoleId = decodeString(matcher.group(4));
-            userList.add(new User(id, firstName, lastName, userRoleId));
+    private static void executeAndDisplayResults(Stage primaryStage) {
+        try {
+            // URL de la consulta
+            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId,CompanyName,Username,Email,Alias,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,LanguageLocaleKey+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
+    
+            // Token de portador
+            String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMV";
+    
+            // Realizar la consulta
+            String response = executeQuery(queryUrl, bearerToken);
+    
+            // Procesar la respuesta y mostrar los IDs y los Names en la tabla
+            ObservableList<User> userList = FXCollections.observableArrayList();
+    
+            Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"UserRoleId\"\\s*:\\s*\"(.*?)\"");
+            Matcher matcher = pattern.matcher(response);
+            while (matcher.find()) {
+                String id = matcher.group(1);
+                String firstName = decodeString(matcher.group(2));
+                String lastName = decodeString(matcher.group(3));
+                String userRoleId = decodeString(matcher.group(4));
+                userList.add(new User(id, firstName, lastName, userRoleId));
+            }
+    
+            userTable.setItems(userList);
+            originalUserList = userList; // Guardar la lista original de usuarios
+        } catch (IOException e){
+            mostrarMensajeError("No se puede conectar a Salesforce.", primaryStage);
         }
-
-        userTable.setItems(userList);
-        originalUserList = userList; // Guardar la lista original de usuarios
     }
+
+    private static void mostrarMensajeError(String mensaje, Stage primaryStage) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+    
+    
 
     private static void filterUsers(String searchText) {
         // Obtener la lista de usuarios original

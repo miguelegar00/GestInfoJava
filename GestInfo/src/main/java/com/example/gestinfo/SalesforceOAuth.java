@@ -94,12 +94,7 @@ public class SalesforceOAuth extends Application {
         resetButton.setOnAction(event -> {
             // Limpiar el campo de búsqueda y restablecer la tabla
             searchField.clear();
-            try {
-                executeAndDisplayResults();
-            } catch (IOException e) {
-                e.printStackTrace();
-                showError("Error al realizar la consulta: " + e.getMessage());
-            }
+            executeAndDisplayResults();
         });
 
         // Crear el contenedor para el campo de búsqueda y el botón de restablecer
@@ -164,13 +159,7 @@ public class SalesforceOAuth extends Application {
         primaryStage.setMaximized(true); // Maximizar la ventana
         primaryStage.show();
     
-        // Realizar la consulta y mostrar los resultados en la tabla
-        try {
-            executeAndDisplayResults();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showError("Error al realizar la consulta: " + e.getMessage());
-        }
+        executeAndDisplayResults();
     }
     
     
@@ -203,32 +192,45 @@ public class SalesforceOAuth extends Application {
     }
     
 
-    private void executeAndDisplayResults() throws IOException {
-        // URL de la consulta
-        String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,Cliente_de__c,Phone+FROM+Account+WHERE+Id+!=+null";
-
-        // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQIeOdMCbNe61.RbJtBcenGc2EJTK.BeJ8PUcZY6oU4VJQ7OPNoXw2Bh3C_8kBHax_QiQelvn9sgyR44vnlAhKkCrdOTF";
-
-        // Realizar la consulta
-        String response = executeQuery(queryUrl, bearerToken);
-
-        // Procesar la respuesta y mostrar los IDs y los Names en la tabla
-        ObservableList<Account> accountList = FXCollections.observableArrayList();
-
-        Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"Cliente_de__c\"\\s*:\\s*\"(.*?)\",\"Phone\"\\s*:\\s*\"(.*?)\"");
-        Matcher matcher = pattern.matcher(response);
-        while (matcher.find()) {
-            String id = matcher.group(1);
-            String name = decodeString(matcher.group(2));
-            String lastName = decodeString(matcher.group(3));
-            String clienteDe = decodeString(matcher.group(4));
-            String phone = decodeString(matcher.group(5));
-            accountList.add(new Account(id, name, lastName, clienteDe, phone));
+    private void executeAndDisplayResults() {
+        try {
+            // URL de la consulta
+            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,Cliente_de__c,Phone+FROM+Account+WHERE+Id+!=+null";
+    
+            // Token de portador
+            String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
+    
+            // Realizar la consulta
+            String response = executeQuery(queryUrl, bearerToken);
+    
+            // Procesar la respuesta y mostrar los IDs y los Names en la tabla
+            ObservableList<Account> accountList = FXCollections.observableArrayList();
+    
+            Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"Cliente_de__c\"\\s*:\\s*\"(.*?)\",\"Phone\"\\s*:\\s*\"(.*?)\"");
+            Matcher matcher = pattern.matcher(response);
+            while (matcher.find()) {
+                String id = matcher.group(1);
+                String name = decodeString(matcher.group(2));
+                String lastName = decodeString(matcher.group(3));
+                String clienteDe = decodeString(matcher.group(4));
+                String phone = decodeString(matcher.group(5));
+                accountList.add(new Account(id, name, lastName, clienteDe, phone));
+            }
+    
+            accountTable.setItems(accountList);
+        } catch (IOException e) {
+            mostrarMensajeError("No se puede conectar a Salesforce.");
         }
-
-        accountTable.setItems(accountList);
     }
+
+    private void mostrarMensajeError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+    
 
     private void generarDocumento() {
         Account selectedAccount = accountTable.getSelectionModel().getSelectedItem();
@@ -287,7 +289,7 @@ public class SalesforceOAuth extends Application {
     }
 
     private void executePatchRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQIeOdMCbNe61.RbJtBcenGc2EJTK.BeJ8PUcZY6oU4VJQ7OPNoXw2Bh3C_8kBHax_QiQelvn9sgyR44vnlAhKkCrdOTF";
+        String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
         httpPatch.addHeader("Content-Type", "application/json");
@@ -311,7 +313,7 @@ public class SalesforceOAuth extends Application {
     }
 
     public static void executePostRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQIeOdMCbNe61.RbJtBcenGc2EJTK.BeJ8PUcZY6oU4VJQ7OPNoXw2Bh3C_8kBHax_QiQelvn9sgyR44vnlAhKkCrdOTF";
+        String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Content-Type", "application/json");
