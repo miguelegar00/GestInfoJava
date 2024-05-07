@@ -82,35 +82,35 @@ public class Inicio extends Application {
 
     // Método para verificar la conexión a Salesforce utilizando el token de acceso
     private boolean verificarConexionSalesforce(String accessToken) {
-    try {
-        // Crear cliente HTTP
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            // Crear cliente HTTP
+            CloseableHttpClient httpClient = HttpClients.createDefault();
 
-        // Crear solicitud GET a una URL de Salesforce (por ejemplo, la URL base)
-        HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=SELECT+Id+FROM+User");
+            // Crear solicitud GET a una URL de Salesforce (por ejemplo, la URL base)
+            HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=SELECT+Id+FROM+User");
 
-        // Agregar el token de acceso al encabezado de autorización
-        httpGet.addHeader("Authorization", "Bearer " + accessToken);
+            // Agregar el token de acceso al encabezado de autorización
+            httpGet.addHeader("Authorization", "Bearer " + accessToken);
 
-        // Ejecutar la solicitud y obtener la respuesta
-        HttpResponse response = httpClient.execute(httpGet);
+            // Ejecutar la solicitud y obtener la respuesta
+            HttpResponse response = httpClient.execute(httpGet);
 
-        // Verificar el código de estado de la respuesta para determinar si la conexión es exitosa
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode >= 200 && statusCode < 300) {
-            
-            // Aquí puedes implementar la lógica para verificar la respuesta SOQL y determinar si contiene algún resultado o no
-            
-            // Por ahora, simplemente devolvemos true para indicar que la conexión fue exitosa
-            return true;
-        } else {
+            // Verificar el código de estado de la respuesta para determinar si la conexión es exitosa
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode >= 200 && statusCode < 300) {
+                
+                // Aquí puedes implementar la lógica para verificar la respuesta SOQL y determinar si contiene algún resultado o no
+                
+                // Por ahora, simplemente devolvemos true para indicar que la conexión fue exitosa
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
     }
-}
 
     // Método para mostrar un mensaje de error
     private void mostrarMensajeError(String mensaje) {
