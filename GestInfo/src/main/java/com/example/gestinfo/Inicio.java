@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 public class Inicio extends Application {
 
     // Bearer token de acceso a Salesforce
-    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
+    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {

@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -21,6 +22,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 public class ShowUsers extends Application {
 
@@ -108,9 +115,53 @@ public class ShowUsers extends Application {
 
         // Configurar el evento del botón de editar
         editButton.setOnAction(event -> {
-            // Aquí puedes agregar la lógica para editar usuarios
-            // Por ejemplo, abrir una nueva ventana para editar el usuario seleccionado
+            // Obtener el usuario seleccionado
+            User selectedUser = userTable.getSelectionModel().getSelectedItem();
+            if (selectedUser != null) {
+                // Mostrar una ventana de diálogo para la edición del usuario
+                Stage editStage = new Stage();
+                editStage.initModality(Modality.APPLICATION_MODAL);
+                editStage.setTitle("Editar Usuario");
+        
+                VBox editRoot = new VBox(10);
+                editRoot.setAlignment(Pos.CENTER);
+                editRoot.setPadding(new Insets(20));
+        
+                // Campos para editar el nombre y apellidos del usuario
+                TextField firstNameField = new TextField(selectedUser.getFirstName());
+                TextField lastNameField = new TextField(selectedUser.getLastName());
+        
+                Button saveButton = new Button("Guardar");
+                saveButton.setOnAction(saveEvent -> {
+                    // Actualizar el usuario con los nuevos valores
+                    selectedUser.setFirstName(firstNameField.getText());
+                    selectedUser.setLastName(lastNameField.getText());
+                    // Actualizar el usuario en Salesforce
+                    try {
+                        String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
+                        String requestBody = "{\"FirstName\": \"" + selectedUser.getFirstName() + "\", \"LastName\": \"" + selectedUser.getLastName() + "\"}";
+                        executePatchRequest(updateUrl, requestBody);
+                        // Actualizar la tabla para reflejar los cambios
+                        userTable.refresh();
+                        // Cerrar la ventana de edición
+                        editStage.close();
+                    } catch (IOException e) {
+                        mostrarMensajeError("Error al actualizar el usuario en Salesforce.", editStage);
+                    }
+                });
+        
+                editRoot.getChildren().addAll(new Label("Nombre:"), firstNameField, new Label("Apellidos:"), lastNameField, saveButton);
+        
+                Scene editScene = new Scene(editRoot, 300, 200);
+                editStage.setScene(editScene);
+                editStage.showAndWait();
+            } else {
+                // Mostrar un mensaje de error si no se selecciona ningún usuario
+                mostrarMensajeError("Por favor, selecciona un usuario para editar.", primaryStage);
+            }
         });
+        
+
 
         // Crear un VBox para centrar verticalmente el botón debajo de la tabla
         VBox buttonContainer = new VBox();
@@ -141,6 +192,33 @@ public class ShowUsers extends Application {
             salesforceOAuthStage.close();
         }
     }
+
+    private void executePatchRequest(String url, String data) throws IOException {
+        // Token de portador
+        String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPatch httpPatch = new HttpPatch(url);
+        httpPatch.addHeader("Content-Type", "application/json");
+        httpPatch.addHeader("Authorization", "Bearer " + bearerToken);
+
+        // Configurar el cuerpo de la solicitud
+        StringEntity entity = new StringEntity(data);
+        httpPatch.setEntity(entity);
+
+        // Ejecutar la solicitud y obtener la respuesta
+        CloseableHttpResponse response = httpClient.execute(httpPatch);
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        // Verificar el código de estado de la respuesta
+        if (statusCode == 200 || statusCode == 204) {
+            // La operación PATCH se realizó correctamente
+            // Aquí puedes manejar la respuesta si es necesario
+        } else {
+            throw new IOException("Error al actualizar el usuario. Código de respuesta HTTP: " + statusCode);
+        }
+    }
+
 
     private static String decodeString(String encodedString) {
         try {
@@ -181,7 +259,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId,CompanyName,Username,Email,Alias,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,LanguageLocaleKey+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMV";
+            String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);

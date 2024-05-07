@@ -198,7 +198,7 @@ public class SalesforceOAuth extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,Cliente_de__c,Phone+FROM+Account+WHERE+Id+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
+            String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
@@ -289,7 +289,7 @@ public class SalesforceOAuth extends Application {
     }
 
     private void executePatchRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
+        String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
         httpPatch.addHeader("Content-Type", "application/json");
@@ -313,7 +313,7 @@ public class SalesforceOAuth extends Application {
     }
 
     public static void executePostRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQI_gqBNdivHZv1QYoSSI2i.FHqYu0AKOARxGIdtGs7rL5SSmYNVHaPm5f6OVMiyJFaBHEULJgJP91jQxDVZXNnVSvMVF";
+        String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Content-Type", "application/json");
@@ -454,82 +454,82 @@ public class SalesforceOAuth extends Application {
     
 
     private void editar() {
-    Account selectedAccount = accountTable.getSelectionModel().getSelectedItem();
-    if (selectedAccount == null) {
-        showError("Debes seleccionar una cuenta para editar.");
-        return;
-    }
-
-    // Abrir una nueva ventana para el formulario de edición
-    Stage editStage = new Stage();
-    VBox editRoot = new VBox();
-    editRoot.setPadding(new Insets(20));
-    editRoot.setSpacing(20);
-    TextField newFirstNameField = new TextField(selectedAccount.getName());
-    TextField newLastNameField = new TextField(selectedAccount.getLastName());
-    TextField newPhoneField = new TextField(selectedAccount.getPhone()); // Nuevo campo para el número de teléfono
-    ComboBox<String> newClienteDeComboBox = new ComboBox<>();
-    newClienteDeComboBox.getItems().addAll("LSO", "Programa");
-    newClienteDeComboBox.setValue(selectedAccount.getCliente()); // Establecer el valor predeterminado del ComboBox
-
-    Button saveButton = new Button("Guardar");
-    saveButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
-    saveButton.setOnAction(event -> {
-        String newFirstName = newFirstNameField.getText();
-        String newLastName = newLastNameField.getText();
-        String newPhone = newPhoneField.getText(); // Obtener el nuevo número de teléfono
-        String newClienteDe = newClienteDeComboBox.getValue(); // Obtener el nuevo valor del ComboBox
-
-        selectedAccount.setName(newFirstName);
-        selectedAccount.setLastName(newLastName);
-        selectedAccount.setPhone(newPhone); // Actualizar el número de teléfono en el objeto Account
-        selectedAccount.setCliente(newClienteDe); // Actualizar el cliente en el objeto Account
-
-        try {
-            // Construir la URL del endpoint de Salesforce para la cuenta específica
-            String accountId = selectedAccount.getId();
-            String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Account/" + accountId;
-
-            // Construir los datos a enviar en la solicitud PATCH, incluyendo el número de teléfono y el cliente
-            String data = "{\"FirstName\": \"" + newFirstName + "\", \"LastName\": \"" + newLastName + "\", \"Phone\": \"" + newPhone + "\", \"Cliente_de__c\": \"" + newClienteDe + "\"}";
-
-            // Ejecutar la solicitud PATCH a Salesforce para actualizar los datos
-            executePatchRequest(updateUrl, data);
-
-            // Cerrar la ventana de edición después de actualizar los datos en Salesforce
-            editStage.close();
-
-            // Actualizar la tabla para reflejar los cambios
-            accountTable.refresh();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showError("Error al actualizar la cuenta: " + e.getMessage());
+        Account selectedAccount = accountTable.getSelectionModel().getSelectedItem();
+        if (selectedAccount == null) {
+            showError("Debes seleccionar una cuenta para editar.");
+            return;
         }
-    });
 
-    HBox buttonContainer = new HBox(saveButton);
-    buttonContainer.setAlignment(Pos.CENTER);
+        // Abrir una nueva ventana para el formulario de edición
+        Stage editStage = new Stage();
+        VBox editRoot = new VBox();
+        editRoot.setPadding(new Insets(20));
+        editRoot.setSpacing(20);
+        TextField newFirstNameField = new TextField(selectedAccount.getName());
+        TextField newLastNameField = new TextField(selectedAccount.getLastName());
+        TextField newPhoneField = new TextField(selectedAccount.getPhone()); // Nuevo campo para el número de teléfono
+        ComboBox<String> newClienteDeComboBox = new ComboBox<>();
+        newClienteDeComboBox.getItems().addAll("LSO", "Programa");
+        newClienteDeComboBox.setValue(selectedAccount.getCliente()); // Establecer el valor predeterminado del ComboBox
 
-    // Agregar el nuevo campo de número de teléfono al diseño de la ventana de edición
-    editRoot.getChildren().addAll(
-            new Label("Nombre:"),
-            newFirstNameField,
-            new Label("Apellido:"),
-            newLastNameField,
-            new Label("Teléfono:"),
-            newPhoneField, // Agregar el campo de número de teléfono al diseño
-            new Label("Cliente de:"),
-            newClienteDeComboBox, // Agregar el ComboBox para el cliente
-            buttonContainer // Agregar el contenedor que contiene el botón centrado
-    );
+        Button saveButton = new Button("Guardar");
+        saveButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
+        saveButton.setOnAction(event -> {
+            String newFirstName = newFirstNameField.getText();
+            String newLastName = newLastNameField.getText();
+            String newPhone = newPhoneField.getText(); // Obtener el nuevo número de teléfono
+            String newClienteDe = newClienteDeComboBox.getValue(); // Obtener el nuevo valor del ComboBox
 
-    Scene editScene = new Scene(editRoot, 400, 400); // Aumentar la altura para incluir el nuevo campo
-    editStage.setScene(editScene);
-    editStage.setMinWidth(400);
-    editStage.setMinHeight(400); // Ajustar la altura mínima para acomodar el nuevo campo
-    editStage.setTitle("Editar Cuenta");
-    editStage.show();
-}
+            selectedAccount.setName(newFirstName);
+            selectedAccount.setLastName(newLastName);
+            selectedAccount.setPhone(newPhone); // Actualizar el número de teléfono en el objeto Account
+            selectedAccount.setCliente(newClienteDe); // Actualizar el cliente en el objeto Account
+
+            try {
+                // Construir la URL del endpoint de Salesforce para la cuenta específica
+                String accountId = selectedAccount.getId();
+                String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Account/" + accountId;
+
+                // Construir los datos a enviar en la solicitud PATCH, incluyendo el número de teléfono y el cliente
+                String data = "{\"FirstName\": \"" + newFirstName + "\", \"LastName\": \"" + newLastName + "\", \"Phone\": \"" + newPhone + "\", \"Cliente_de__c\": \"" + newClienteDe + "\"}";
+
+                // Ejecutar la solicitud PATCH a Salesforce para actualizar los datos
+                executePatchRequest(updateUrl, data);
+
+                // Cerrar la ventana de edición después de actualizar los datos en Salesforce
+                editStage.close();
+
+                // Actualizar la tabla para reflejar los cambios
+                accountTable.refresh();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showError("Error al actualizar la cuenta: " + e.getMessage());
+            }
+        });
+
+        HBox buttonContainer = new HBox(saveButton);
+        buttonContainer.setAlignment(Pos.CENTER);
+
+        // Agregar el nuevo campo de número de teléfono al diseño de la ventana de edición
+        editRoot.getChildren().addAll(
+                new Label("Nombre:"),
+                newFirstNameField,
+                new Label("Apellido:"),
+                newLastNameField,
+                new Label("Teléfono:"),
+                newPhoneField, // Agregar el campo de número de teléfono al diseño
+                new Label("Cliente de:"),
+                newClienteDeComboBox, // Agregar el ComboBox para el cliente
+                buttonContainer // Agregar el contenedor que contiene el botón centrado
+        );
+
+        Scene editScene = new Scene(editRoot, 400, 400); // Aumentar la altura para incluir el nuevo campo
+        editStage.setScene(editScene);
+        editStage.setMinWidth(400);
+        editStage.setMinHeight(400); // Ajustar la altura mínima para acomodar el nuevo campo
+        editStage.setTitle("Editar Cuenta");
+        editStage.show();
+    }
 
 
     private void cerrarSesion() {
