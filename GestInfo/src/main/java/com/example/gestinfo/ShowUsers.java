@@ -22,8 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.controlsfx.tools.Platform;
-
 public class ShowUsers extends Application {
 
     private static TableView<User> userTable;
