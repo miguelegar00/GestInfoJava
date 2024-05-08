@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,7 +103,13 @@ public class ShowUsers extends Application {
         TableColumn<User, String> userRoleIdColumn = new TableColumn<>("Rol de usuario");
         userRoleIdColumn.setCellValueFactory(cellData -> cellData.getValue().userRoleIdProperty());
 
-        userTable.getColumns().addAll(firstNameColumn, lastNameColumn, userRoleIdColumn);
+        TableColumn<User, String> isActiveColumn = new TableColumn<>("¿Usuario activo?");
+        isActiveColumn.setCellValueFactory(cellData -> {
+            Boolean isActive = cellData.getValue().getIsActive();
+            return new SimpleStringProperty(isActive ? "Sí" : "No");
+        });
+
+        userTable.getColumns().addAll(firstNameColumn, lastNameColumn, userRoleIdColumn, isActiveColumn);
 
         executeAndDisplayResults(primaryStage);
 
@@ -111,7 +118,7 @@ public class ShowUsers extends Application {
 
         // Crear el botón de editar
         Button editButton = new Button("Editar");
-        editButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
+        editButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
 
         // Configurar el evento del botón de editar
         editButton.setOnAction(event -> {
@@ -160,13 +167,88 @@ public class ShowUsers extends Application {
                 mostrarMensajeError("Por favor, selecciona un usuario para editar.", primaryStage);
             }
         });
-        
+
+        // Crear el botón de borrar
+        Button activateButton = new Button("Activar");
+        activateButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
+
+        // Configurar el evento del botón de borrar
+        activateButton.setOnAction(event -> {
+            // Obtener el usuario seleccionado
+            User selectedUser = userTable.getSelectionModel().getSelectedItem();
+            if (selectedUser != null) {
+                // Mostrar un diálogo de confirmación antes de borrar
+                Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmationDialog.setTitle("Confirmación de activación");
+                confirmationDialog.setHeaderText("¿Estás seguro de que quieres activar a este usuario?");
+
+                // Obtener la respuesta del usuario desde el diálogo de confirmación
+                Optional<ButtonType> result = confirmationDialog.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    // Cambiar el campo IsActive a null
+                    selectedUser.setIsActive(true);
+                    
+                    // Actualizar el usuario en Salesforce
+                    try {
+                        String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
+                        String requestBody = "{\"IsActive\": true}";
+                        executePatchRequest(updateUrl, requestBody);
+                        // Actualizar la tabla para reflejar los cambios
+                        userTable.refresh();
+                    } catch (IOException e) {
+                        mostrarMensajeError("Error al actualizar el usuario en Salesforce.", primaryStage);
+                    }
+                }
+            } else {
+                // Mostrar un mensaje de error si no se selecciona ningún usuario
+                mostrarMensajeError("Por favor, selecciona un usuario para activar.", primaryStage);
+            }
+        });
+
+        // Crear el botón de desactivar
+        Button desactivateButton = new Button("Desactivar");
+        desactivateButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+
+        // Configurar el evento del botón de desactivar
+        desactivateButton.setOnAction(event -> {
+            // Obtener el usuario seleccionado
+            User selectedUser = userTable.getSelectionModel().getSelectedItem();
+            if (selectedUser != null) {
+                // Mostrar un diálogo de confirmación antes de desactivar
+                Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmationDialog.setTitle("Confirmación de desactivación");
+                confirmationDialog.setHeaderText("¿Estás seguro de que quieres desactivar a este usuario?");
+
+                // Obtener la respuesta del usuario desde el diálogo de confirmación
+                Optional<ButtonType> result = confirmationDialog.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    // Cambiar el campo IsActive a null
+                    selectedUser.setIsActive(false);
+                    
+                    // Actualizar el usuario en Salesforce
+                    try {
+                        String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
+                        String requestBody = "{\"IsActive\": false}";
+                        executePatchRequest(updateUrl, requestBody);
+                        // Actualizar la tabla para reflejar los cambios
+                        userTable.refresh();
+                    } catch (IOException e) {
+                        mostrarMensajeError("Error al actualizar el usuario en Salesforce.", primaryStage);
+                    }
+                }
+            } else {
+                // Mostrar un mensaje de error si no se selecciona ningún usuario
+                mostrarMensajeError("Por favor, selecciona un usuario para desactivar.", primaryStage);
+            }
+        });
 
 
-        // Crear un VBox para centrar verticalmente el botón debajo de la tabla
-        VBox buttonContainer = new VBox();
+        // Crear un HBox para colocar los botones uno al lado del otro debajo de la tabla
+        HBox buttonContainer = new HBox();
         buttonContainer.setAlignment(Pos.CENTER);
-        buttonContainer.getChildren().add(editButton);
+        buttonContainer.setSpacing(10); // Espacio entre los botones
+        buttonContainer.getChildren().addAll(activateButton, editButton, desactivateButton);
+
 
         // Establecer el margen inferior del VBox
         VBox.setMargin(buttonContainer, new Insets(0, 0, 10, 0)); // 10 píxeles de margen inferior
@@ -195,7 +277,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
+        String bearerToken = "00DUB000001QzdZ!AQEAQJZ8X9lSxgNLRrkMih.dYeviguFhKc8R28Or04zWycr_O5_liNvsx4KGbcbW4jfuhQwyLFdU3TCy0E77T3nzP5muPScx";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -256,10 +338,10 @@ public class ShowUsers extends Application {
     private static void executeAndDisplayResults(Stage primaryStage) {
         try {
             // URL de la consulta
-            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,ProfileId,CompanyName,Username,Email,Alias,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,LanguageLocaleKey+FROM+User+WHERE+UserRoleId+!=+null+AND+IsActive+=+true+AND+ProfileId+!=+null";
+            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
+            String bearerToken = "00DUB000001QzdZ!AQEAQJZ8X9lSxgNLRrkMih.dYeviguFhKc8R28Or04zWycr_O5_liNvsx4KGbcbW4jfuhQwyLFdU3TCy0E77T3nzP5muPScx";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
@@ -267,14 +349,15 @@ public class ShowUsers extends Application {
             // Procesar la respuesta y mostrar los IDs y los Names en la tabla
             ObservableList<User> userList = FXCollections.observableArrayList();
     
-            Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"UserRoleId\"\\s*:\\s*\"(.*?)\"");
+            Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"UserRoleId\"\\s*:\\s*\"(.*?)\",\"IsActive\"\\s*:\\s*(true|false)");
             Matcher matcher = pattern.matcher(response);
             while (matcher.find()) {
                 String id = matcher.group(1);
                 String firstName = decodeString(matcher.group(2));
                 String lastName = decodeString(matcher.group(3));
                 String userRoleId = decodeString(matcher.group(4));
-                userList.add(new User(id, firstName, lastName, userRoleId));
+                Boolean isActive = Boolean.parseBoolean(matcher.group(5));
+                userList.add(new User(id, firstName, lastName, userRoleId, isActive));
             }
     
             userTable.setItems(userList);
@@ -324,16 +407,26 @@ public class ShowUsers extends Application {
         private final SimpleStringProperty firstName;
         private final SimpleStringProperty lastName;
         private final SimpleStringProperty userRoleId;
+        private boolean isActive;
 
-        public User(String id, String firstName, String lastName, String userRoleId) {
+        public User(String id, String firstName, String lastName, String userRoleId, Boolean isActive) {
             this.id = new SimpleStringProperty(id);
             this.firstName = new SimpleStringProperty(firstName);
             this.lastName = new SimpleStringProperty(lastName);
             this.userRoleId = new SimpleStringProperty(userRoleId);
+            this.isActive = isActive;
         }
 
         public String getId() {
             return id.get();
+        }
+
+        public Boolean getIsActive() {
+            return isActive;
+        }
+
+        public void setIsActive(Boolean isActive) {
+            this.isActive = isActive;
         }
 
         public void setId(String id) {

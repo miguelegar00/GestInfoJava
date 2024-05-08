@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 public class Inicio extends Application {
 
     // Bearer token de acceso a Salesforce
-    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQK6CEZVdhaGEAyONyl5LYc6xruyzuh6obdEss0FcE6xXZMX01TNOUNZW_wG94s0MPv9HwSGw6s2oyE1ogH7NtpmuWYsZ";
+    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQJZ8X9lSxgNLRrkMih.dYeviguFhKc8R28Or04zWycr_O5_liNvsx4KGbcbW4jfuhQwyLFdU3TCy0E77T3nzP5muPScx";
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
@@ -86,7 +86,7 @@ public class Inicio extends Application {
             // Crear cliente HTTP
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
-            // Crear solicitud GET a una URL de Salesforce (por ejemplo, la URL base)
+            // Crear solicitud GET a una URL de Salesforce
             HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=SELECT+Id+FROM+User");
 
             // Agregar el token de acceso al encabezado de autorización
@@ -98,12 +98,11 @@ public class Inicio extends Application {
             // Verificar el código de estado de la respuesta para determinar si la conexión es exitosa
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode >= 200 && statusCode < 300) {
-                
-                // Aquí puedes implementar la lógica para verificar la respuesta SOQL y determinar si contiene algún resultado o no
-                
-                // Por ahora, simplemente devolvemos true para indicar que la conexión fue exitosa
+
                 return true;
+
             } else {
+
                 return false;
             }
         } catch (Exception e) {
