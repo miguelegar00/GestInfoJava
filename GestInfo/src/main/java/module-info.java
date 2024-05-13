@@ -11,6 +11,7 @@ module com.example.gestinfo {
     requires com.fasterxml.jackson.databind;
     requires force.wsc;
     requires java.net.http;
+    requires javafx.graphics;
     opens com.example.gestinfo to javafx.fxml;
     exports com.example.gestinfo;
 }

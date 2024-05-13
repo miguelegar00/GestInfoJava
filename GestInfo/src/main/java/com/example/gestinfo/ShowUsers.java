@@ -20,6 +20,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +38,45 @@ public class ShowUsers extends Application {
     private static TableView<User> userTable;
     private static TextField searchField;
 
-    private static ObservableList<User> originalUserList; // Almacena la lista original de usuarios
+    private static ObservableList<User> originalUserList;
+
+    private static final Map<String, String> roleNames = new HashMap<>();
+    static {
+        roleNames.put("00ESo0000000ZR7MAM", "Administración");
+        roleNames.put("00E7Q000000gurtUAA", "Análisis");
+        roleNames.put("00E7Q000000guroUAA", "Contestaciones");
+        roleNames.put("00ESo0000000ZQnMAM", "Dirección");
+        roleNames.put("00ESo0000000ZQoMAM", "Dirección Comercial");
+        roleNames.put("00ESo0000000ZQpMAM", "Dirección Financiera");
+        roleNames.put("00ESo0000000ZQqMAM", "Dirección Legal");
+        roleNames.put("00E7Q000000gurZUAQ", "Documentación");
+        roleNames.put("00E7Q000000guryUAA", "Ejecuciones");
+        roleNames.put("00ESo0000000ZR8MAM", "Finanzas");
+        roleNames.put("00E7Q000000gv5XUAQ", "Gestores de cartera");
+        roleNames.put("00E7Q000000gv5YUAQ", "Gestores de Cartera Seniors");
+        roleNames.put("00E7Q000000gv5ZUAQ", "Gestores de Inactivos");
+        roleNames.put("00E7Q000000gwkSUAQ", "Gestores de Onboarding");
+        roleNames.put("00ESo0000000ZQrMAM", "Gestores Inactivos");
+        roleNames.put("00ESo000000ElBxMAK", "Gestor de Poder Notarial");
+        roleNames.put("00E7Q000000gv5WUAQ", "Jefe de equipo Gestores");
+        roleNames.put("00E7Q000000gurPUAQ", "Jefe de equipo legal");
+        roleNames.put("00ESo0000000ZQtMAM", "Jefe de equipo Preventa");
+        roleNames.put("00ESo0000000ZQuMAM", "Jefe de equipo Venta");
+        roleNames.put("00ESo0000000ZQvMAM", "Jefe equipo Administración");
+        roleNames.put("00ESo0000000ZQwMAM", "Jefe equipo Ejecuciones");
+        roleNames.put("00ESo0000000ZQsMAM", "Jefe Equipo Finanzas");
+        roleNames.put("00E7Q000000gus3UAA", "LSO");
+        roleNames.put("00ESo0000000ZQxMAM", "Marketing");
+        roleNames.put("00ESo0000000ZQyMAM", "Negociación No Reclamable");
+        roleNames.put("00ESo0000000ZQzMAM", "Negociación Reclamable");
+        roleNames.put("00ESo0000000ZR0MAM", "Operaciones");
+        roleNames.put("00ESo0000000ZR1MAM", "Preventa Junior");
+        roleNames.put("00ESo0000000ZR2MAM", "Preventa Senior");
+        roleNames.put("00ESo0000000ZR3MAM", "RRHH");
+        roleNames.put("00ESo0000000ZR5MAM", "Venta deuda mayor");
+        roleNames.put("00ESo0000000ZR6MAM", "Venta deuda menor");
+        roleNames.put("00ESo0000000ZR4MAM", "Venta LSO");
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -101,7 +142,17 @@ public class ShowUsers extends Application {
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
         TableColumn<User, String> userRoleIdColumn = new TableColumn<>("Rol de usuario");
-        userRoleIdColumn.setCellValueFactory(cellData -> cellData.getValue().userRoleIdProperty());
+        userRoleIdColumn.setCellValueFactory(cellData -> {
+            String roleId = cellData.getValue().getUserRoleId();
+            // Verificar si el ID del rol está en el mapa
+            if (roleNames.containsKey(roleId)) {
+                // Si está en el mapa, devuelve el nombre del rol correspondiente
+                return new SimpleStringProperty(roleNames.get(roleId));
+            } else {
+                // De lo contrario, devuelve el ID del rol
+                return new SimpleStringProperty(roleId);
+            }
+        });
 
         TableColumn<User, String> isActiveColumn = new TableColumn<>("¿Usuario activo?");
         isActiveColumn.setCellValueFactory(cellData -> {
@@ -122,31 +173,38 @@ public class ShowUsers extends Application {
 
         // Configurar el evento del botón de editar
         editButton.setOnAction(event -> {
-            // Obtener el usuario seleccionado
             User selectedUser = userTable.getSelectionModel().getSelectedItem();
             if (selectedUser != null) {
-                // Mostrar una ventana de diálogo para la edición del usuario
                 Stage editStage = new Stage();
                 editStage.initModality(Modality.APPLICATION_MODAL);
                 editStage.setTitle("Editar Usuario");
-        
+    
                 VBox editRoot = new VBox(10);
                 editRoot.setAlignment(Pos.CENTER);
                 editRoot.setPadding(new Insets(20));
-        
+    
                 // Campos para editar el nombre y apellidos del usuario
                 TextField firstNameField = new TextField(selectedUser.getFirstName());
                 TextField lastNameField = new TextField(selectedUser.getLastName());
-        
+    
+                // ComboBox para seleccionar el userRoleId
+                ComboBox<String> roleIdComboBox = new ComboBox<>();
+                roleIdComboBox.setPromptText("Seleccionar rol");
+    
+                // Agregar los roles disponibles al ComboBox
+                roleIdComboBox.getItems().addAll(roleNames.values());
+                roleIdComboBox.setValue(roleNames.get(selectedUser.getUserRoleId()));
+    
                 Button saveButton = new Button("Guardar");
                 saveButton.setOnAction(saveEvent -> {
-                    // Actualizar el usuario con los nuevos valores
                     selectedUser.setFirstName(firstNameField.getText());
                     selectedUser.setLastName(lastNameField.getText());
+                    // Actualizar el userRoleId con el valor seleccionado en el ComboBox
+                    selectedUser.setUserRoleId(getKeyFromValue(roleNames, roleIdComboBox.getValue()));
                     // Actualizar el usuario en Salesforce
                     try {
                         String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
-                        String requestBody = "{\"FirstName\": \"" + selectedUser.getFirstName() + "\", \"LastName\": \"" + selectedUser.getLastName() + "\"}";
+                        String requestBody = "{\"FirstName\": \"" + selectedUser.getFirstName() + "\", \"LastName\": \"" + selectedUser.getLastName() + "\", \"UserRoleId\": \"" + selectedUser.getUserRoleId() + "\"}";
                         executePatchRequest(updateUrl, requestBody);
                         // Actualizar la tabla para reflejar los cambios
                         userTable.refresh();
@@ -157,9 +215,9 @@ public class ShowUsers extends Application {
                     }
                 });
         
-                editRoot.getChildren().addAll(new Label("Nombre:"), firstNameField, new Label("Apellidos:"), lastNameField, saveButton);
+                editRoot.getChildren().addAll(new Label("Nombre:"), firstNameField, new Label("Apellidos:"), lastNameField, new Label("Rol de usuario:"), roleIdComboBox, saveButton);
         
-                Scene editScene = new Scene(editRoot, 300, 200);
+                Scene editScene = new Scene(editRoot, 300, 250);
                 editStage.setScene(editScene);
                 editStage.showAndWait();
             } else {
@@ -275,9 +333,18 @@ public class ShowUsers extends Application {
         }
     }
 
+    private <K, V> K getKeyFromValue(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQJZ8X9lSxgNLRrkMih.dYeviguFhKc8R28Or04zWycr_O5_liNvsx4KGbcbW4jfuhQwyLFdU3TCy0E77T3nzP5muPScx";
+        String bearerToken = "00DUB000001QzdZ!AQEAQN.LqvY7AgYSvg0OL8d0diBWx.LM0sxclVBCdrsPtJZzi5sYbFEkcz0_IKH7v4rZExSasPCJS1IfFwW0tkKX_lKny0AA";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -341,7 +408,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQJZ8X9lSxgNLRrkMih.dYeviguFhKc8R28Or04zWycr_O5_liNvsx4KGbcbW4jfuhQwyLFdU3TCy0E77T3nzP5muPScx";
+            String bearerToken = "00DUB000001QzdZ!AQEAQN.LqvY7AgYSvg0OL8d0diBWx.LM0sxclVBCdrsPtJZzi5sYbFEkcz0_IKH7v4rZExSasPCJS1IfFwW0tkKX_lKny0AA";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);

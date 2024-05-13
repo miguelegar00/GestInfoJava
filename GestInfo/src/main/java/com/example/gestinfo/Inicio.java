@@ -11,17 +11,22 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Inicio extends Application {
 
+    // Credenciales de inicio de sesión
+    private static final String USERNAME = "1";
+    private static final String PASSWORD = "1";
+
     // Bearer token de acceso a Salesforce
-    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQJZ8X9lSxgNLRrkMih.dYeviguFhKc8R28Or04zWycr_O5_liNvsx4KGbcbW4jfuhQwyLFdU3TCy0E77T3nzP5muPScx";
+    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQN.LqvY7AgYSvg0OL8d0diBWx.LM0sxclVBCdrsPtJZzi5sYbFEkcz0_IKH7v4rZExSasPCJS1IfFwW0tkKX_lKny0AA";
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
@@ -34,43 +39,63 @@ public class Inicio extends Application {
         imageView.setFitHeight(200); // Alto de la imagen
         imageView.setPreserveRatio(true); // Mantener la proporción de la imagen al cambiar el tamaño
 
-        // Centrar la imagen verticalmente y horizontalmente
-        StackPane imagePane = new StackPane(imageView);
-        imagePane.setAlignment(Pos.CENTER);
+        // Crear campos de texto para el nombre de usuario y la contraseña
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Username");
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
 
         // Crear el botón "Acceder" con estilo CSS personalizado
         Button accederButton = new Button("Acceder");
         accederButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-color: transparent; -fx-border-radius: 5;");
         accederButton.setOnAction(event -> {
-            // Verificar la conexión a Salesforce utilizando el token de acceso
-            boolean conexionExitosa = verificarConexionSalesforce(SALESFORCE_BEARER_TOKEN);
-            if (conexionExitosa) {
-                // Ejecutar la clase SalesforceOAuth si la conexión es exitosa
-                SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
-                try {
-                    salesforceOAuth.start(new Stage());
-                    primaryStage.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            // Obtener el nombre de usuario y la contraseña ingresados
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+
+            // Verificar las credenciales
+            if (username.equals(USERNAME) && password.equals(PASSWORD)) {
+                // Verificar la conexión a Salesforce utilizando el token de acceso
+                boolean conexionExitosa = verificarConexionSalesforce(SALESFORCE_BEARER_TOKEN);
+                if (conexionExitosa) {
+                    // Ejecutar la clase SalesforceOAuth si la conexión es exitosa
+                    SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
+                    try {
+                        salesforceOAuth.start(new Stage());
+                        primaryStage.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Mostrar un mensaje de error si la conexión falla
+                    mostrarMensajeError("No se puede conectar a Salesforce.");
                 }
             } else {
-                // Mostrar un mensaje de error si la conexión falla
-                mostrarMensajeError("No se puede conectar a Salesforce.");
+                // Mostrar un mensaje de error si las credenciales son incorrectas
+                mostrarMensajeError("Credenciales incorrectas.");
             }
         });
 
-        // Colocar el botón en la esquina inferior derecha y centrarlo horizontalmente
-        HBox buttonContainer = new HBox(accederButton);
-        buttonContainer.setAlignment(Pos.BOTTOM_CENTER);
-        buttonContainer.setPadding(new Insets(10));
+        // Organizar los campos de texto y el botón en un GridPane
+        GridPane loginGrid = new GridPane();
+        loginGrid.setAlignment(Pos.CENTER);
+        loginGrid.setHgap(10);
+        loginGrid.setVgap(10);
+        loginGrid.setPadding(new Insets(25, 25, 25, 25));
+        loginGrid.add(usernameField, 0, 0);
+        loginGrid.add(passwordField, 0, 1);
+        loginGrid.add(accederButton, 0, 2);
+        // Establecer el margen del botón para moverlo 10 píxeles a la derecha
+        GridPane.setMargin(accederButton, new Insets(0, 0, 0, 25));
+
 
         // Configurar el contenedor principal
         BorderPane root = new BorderPane();
-        root.setCenter(imagePane); // Colocar la imagen en el centro
-        root.setBottom(buttonContainer); // Colocar el botón en la parte inferior derecha
+        root.setCenter(imageView); // Colocar la imagen en el centro
+        root.setBottom(loginGrid); // Colocar el formulario debajo de la imagen
 
         // Configurar la escena y mostrar la ventana
-        Scene scene = new Scene(root, 400, 300);
+        Scene scene = new Scene(root, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Soluciona Mi Deuda");
 
@@ -97,14 +122,7 @@ public class Inicio extends Application {
 
             // Verificar el código de estado de la respuesta para determinar si la conexión es exitosa
             int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 200 && statusCode < 300) {
-
-                return true;
-
-            } else {
-
-                return false;
-            }
+            return statusCode >= 200 && statusCode < 300;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

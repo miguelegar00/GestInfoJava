@@ -40,8 +40,6 @@ public class OpenUrlExampleFX extends Application {
         urlMap.put("Solicitud Concurso Con Masa", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoConMasa?id=" + this.accountId);
         urlMap.put("Solicitud Concurso Sin Masa", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoSinMasa?id=" + this.accountId);
         urlMap.put("EPI", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/EPI?id=" + this.accountId);
-        urlMap.put("Anexode Agregacion de Deuda", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/AnexodeAgregaciondeDeuda?id=" + this.accountId);
-        urlMap.put("Anexo Exclusión Modificación", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/AnexoExclusionModificacion?id=" + this.accountId);
         urlMap.put("Baja Activa LSF", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/BajaActivaLSOVF?id=" + this.accountId);
 
         // Configura la picklist
