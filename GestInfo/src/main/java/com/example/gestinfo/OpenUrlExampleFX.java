@@ -39,6 +39,7 @@ public class OpenUrlExampleFX extends Application {
         urlMap = new HashMap<>();
         urlMap.put("Solicitud Concurso Con Masa", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoConMasa?id=" + this.accountId);
         urlMap.put("Solicitud Concurso Sin Masa", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoSinMasa?id=" + this.accountId);
+        urlMap.put("Inventario de bienes y servicios", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/LSOBienesYServicios?id=" + this.accountId);
         urlMap.put("EPI", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/EPI?id=" + this.accountId);
         urlMap.put("Baja Activa LSF", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/BajaActivaLSOVF?id=" + this.accountId);
 

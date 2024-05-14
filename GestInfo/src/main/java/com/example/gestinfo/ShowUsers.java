@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
@@ -300,12 +301,41 @@ public class ShowUsers extends Application {
             }
         });
 
+        Button caseButton = new Button("Ver casos");
+        caseButton.setStyle("-fx-background-color: #ffc107; -fx-text-fill: white;");
+
+        // Configurar el evento del botón de ver casos
+        caseButton.setOnAction(event -> {
+            User selectedUser = userTable.getSelectionModel().getSelectedItem();
+            if (selectedUser != null) {
+                try {
+                    // Realizar la consulta para verificar si hay casos del usuario seleccionado
+                    String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
+                    String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
+                    String response = executeQuery(queryUrl, bearerToken);
+
+                    // Procesar la respuesta para verificar si hay casos
+                    if (response.contains("\"totalSize\":0")) {
+                        // No hay casos, mostrar un mensaje de error
+                        mostrarMensajeError("El usuario seleccionado no tiene ningún caso pendiente.", primaryStage);
+                    } else {
+                        // Hay casos, abrir la ventana de casos
+                        abrirVentanaCasos(selectedUser);
+                    }
+                } catch (IOException e) {
+                    mostrarMensajeError("Error al verificar los casos del usuario.", primaryStage);
+                }
+            } else {
+                mostrarMensajeError("Por favor, selecciona un usuario para ver los casos.", primaryStage);
+            }
+        });
 
         // Crear un HBox para colocar los botones uno al lado del otro debajo de la tabla
         HBox buttonContainer = new HBox();
         buttonContainer.setAlignment(Pos.CENTER);
         buttonContainer.setSpacing(10); // Espacio entre los botones
-        buttonContainer.getChildren().addAll(activateButton, editButton, desactivateButton);
+        buttonContainer.getChildren().addAll(activateButton, editButton, desactivateButton, caseButton);
+
 
 
         // Establecer el margen inferior del VBox
@@ -333,6 +363,80 @@ public class ShowUsers extends Application {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private void abrirVentanaCasos(User selectedUser) {
+        Stage caseStage = new Stage();
+        caseStage.initModality(Modality.APPLICATION_MODAL);
+        caseStage.setTitle("Casos de " + selectedUser.getFirstName() + " " + selectedUser.getLastName());
+
+        TableView<CaseInfo> caseTable = new TableView<>();
+        TableColumn<CaseInfo, String> subjectColumn = new TableColumn<>("Asunto");
+        subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
+
+        TableColumn<CaseInfo, String> stageColumn = new TableColumn<>("Estado");
+        stageColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
+
+        caseTable.getColumns().addAll(subjectColumn, stageColumn);
+
+        try {
+            // Realizar la consulta de los casos del usuario seleccionado
+            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Stage__c+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
+            String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
+            String response = executeQuery(queryUrl, bearerToken);
+
+            // Procesar la respuesta y agregar los casos a la tabla
+            ObservableList<CaseInfo> caseList = FXCollections.observableArrayList();
+            Pattern pattern = Pattern.compile("\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Stage__c\"\\s*:\\s*\"(.*?)\"");
+            Matcher matcher = pattern.matcher(response);
+            while (matcher.find()) {
+                String subject = decodeString(matcher.group(1));
+                String stage = decodeString(matcher.group(2));
+                caseList.add(new CaseInfo(subject, stage));
+            }
+            caseTable.setItems(caseList);
+        } catch (IOException e) {
+            mostrarMensajeError("Error al obtener los casos del usuario.", caseStage);
+        }
+
+        VBox caseRoot = new VBox(10);
+        caseRoot.setAlignment(Pos.CENTER);
+        caseRoot.setPadding(new Insets(20));
+        caseRoot.getChildren().add(caseTable);
+
+        Scene caseScene = new Scene(caseRoot, 400, 300);
+        caseStage.setScene(caseScene);
+        caseStage.showAndWait();
+    }
+
+    public static class CaseInfo {
+        private final SimpleStringProperty subject;
+        private final SimpleStringProperty stage;
+
+        public CaseInfo(String subject, String stage) {
+            this.subject = new SimpleStringProperty(subject);
+            this.stage = new SimpleStringProperty(stage);
+        }
+
+        public String getSubject() {
+            return subject.get();
+        }
+
+        @SuppressWarnings("exports")
+        public SimpleStringProperty subjectProperty() {
+            return subject;
+        }
+
+        public String getStage() {
+            return stage.get();
+        }
+
+        @SuppressWarnings("exports")
+        public SimpleStringProperty stageProperty() {
+            return stage;
+        }
+    }
+
+
     private <K, V> K getKeyFromValue(Map<K, V> map, V value) {
         for (Map.Entry<K, V> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
@@ -344,7 +448,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQN.LqvY7AgYSvg0OL8d0diBWx.LM0sxclVBCdrsPtJZzi5sYbFEkcz0_IKH7v4rZExSasPCJS1IfFwW0tkKX_lKny0AA";
+        String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -408,7 +512,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQN.LqvY7AgYSvg0OL8d0diBWx.LM0sxclVBCdrsPtJZzi5sYbFEkcz0_IKH7v4rZExSasPCJS1IfFwW0tkKX_lKny0AA";
+            String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);

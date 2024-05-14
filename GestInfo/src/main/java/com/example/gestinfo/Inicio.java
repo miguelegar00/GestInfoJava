@@ -26,7 +26,7 @@ public class Inicio extends Application {
     private static final String PASSWORD = "1";
 
     // Bearer token de acceso a Salesforce
-    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQN.LqvY7AgYSvg0OL8d0diBWx.LM0sxclVBCdrsPtJZzi5sYbFEkcz0_IKH7v4rZExSasPCJS1IfFwW0tkKX_lKny0AA";
+    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
@@ -45,7 +45,7 @@ public class Inicio extends Application {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
 
-        // Crear el botón "Acceder" con estilo CSS personalizado
+        // Crear el botón Acceder
         Button accederButton = new Button("Acceder");
         accederButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-color: transparent; -fx-border-radius: 5;");
         accederButton.setOnAction(event -> {
