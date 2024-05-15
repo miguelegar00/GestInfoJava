@@ -2,6 +2,7 @@ package com.example.gestinfo;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -310,8 +311,8 @@ public class ShowUsers extends Application {
             if (selectedUser != null) {
                 try {
                     // Realizar la consulta para verificar si hay casos del usuario seleccionado
-                    String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-                    String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
+                    String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
+                    String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
                     String response = executeQuery(queryUrl, bearerToken);
 
                     // Procesar la respuesta para verificar si hay casos
@@ -363,6 +364,7 @@ public class ShowUsers extends Application {
         }
     }
 
+    
     @SuppressWarnings("unchecked")
     private void abrirVentanaCasos(User selectedUser) {
         Stage caseStage = new Stage();
@@ -373,20 +375,21 @@ public class ShowUsers extends Application {
         TableColumn<CaseInfo, String> subjectColumn = new TableColumn<>("Asunto");
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
 
+        // Nueva columna para el campo "Estado"
         TableColumn<CaseInfo, String> stageColumn = new TableColumn<>("Estado");
         stageColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
 
-        caseTable.getColumns().addAll(subjectColumn, stageColumn);
+        caseTable.getColumns().addAll(subjectColumn, stageColumn); // Agregar la nueva columna a la tabla
 
         try {
             // Realizar la consulta de los casos del usuario seleccionado
-            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Stage__c+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-            String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
+            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
+            String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
             String response = executeQuery(queryUrl, bearerToken);
 
             // Procesar la respuesta y agregar los casos a la tabla
             ObservableList<CaseInfo> caseList = FXCollections.observableArrayList();
-            Pattern pattern = Pattern.compile("\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Stage__c\"\\s*:\\s*\"(.*?)\"");
+            Pattern pattern = Pattern.compile("\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Status\"\\s*:\\s*\"(.*?)\"");
             Matcher matcher = pattern.matcher(response);
             while (matcher.find()) {
                 String subject = decodeString(matcher.group(1));
@@ -410,18 +413,17 @@ public class ShowUsers extends Application {
 
     public static class CaseInfo {
         private final SimpleStringProperty subject;
-        private final SimpleStringProperty stage;
+        private final SimpleStringProperty stage; // Nueva propiedad para el campo "Estado"
 
         public CaseInfo(String subject, String stage) {
             this.subject = new SimpleStringProperty(subject);
-            this.stage = new SimpleStringProperty(stage);
+            this.stage = new SimpleStringProperty(stage); // Inicializar la nueva propiedad
         }
 
         public String getSubject() {
             return subject.get();
         }
 
-        @SuppressWarnings("exports")
         public SimpleStringProperty subjectProperty() {
             return subject;
         }
@@ -430,7 +432,6 @@ public class ShowUsers extends Application {
             return stage.get();
         }
 
-        @SuppressWarnings("exports")
         public SimpleStringProperty stageProperty() {
             return stage;
         }
@@ -448,7 +449,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
+        String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -512,7 +513,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQNML6BOfu3YI29Am0HjxAAxrwIriKosCWm_uEhuoKoC5wvMsqMT.WJDq8fy3JhQnNpzAoetivmMWoT2Sxz3ShJbwR1AK";
+            String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
