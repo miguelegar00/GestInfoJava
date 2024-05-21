@@ -312,13 +312,13 @@ public class ShowUsers extends Application {
                 try {
                     // Realizar la consulta para verificar si hay casos del usuario seleccionado
                     String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-                    String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+                    String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
                     String response = executeQuery(queryUrl, bearerToken);
 
                     // Procesar la respuesta para verificar si hay casos
                     if (response.contains("\"totalSize\":0")) {
                         // No hay casos, mostrar un mensaje de error
-                        mostrarMensajeError("El usuario seleccionado no tiene ningún caso pendiente.", primaryStage);
+                        mostrarMensajeError("El usuario seleccionado no tiene ningún caso asignado.", primaryStage);
                     } else {
                         // Hay casos, abrir la ventana de casos
                         abrirVentanaCasos(selectedUser);
@@ -384,7 +384,7 @@ public class ShowUsers extends Application {
         try {
             // Realizar la consulta de los casos del usuario seleccionado
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-            String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+            String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
             String response = executeQuery(queryUrl, bearerToken);
 
             // Procesar la respuesta y agregar los casos a la tabla
@@ -449,7 +449,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+        String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -513,7 +513,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+            String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);

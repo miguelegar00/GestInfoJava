@@ -15,6 +15,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,8 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
@@ -198,7 +199,7 @@ public class SalesforceOAuth extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,Cliente_de__c,Phone+FROM+Account+WHERE+Id+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+            String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
@@ -289,7 +290,7 @@ public class SalesforceOAuth extends Application {
     }
 
     private void executePatchRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+        String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
         httpPatch.addHeader("Content-Type", "application/json");
@@ -313,7 +314,7 @@ public class SalesforceOAuth extends Application {
     }
 
     public static void executePostRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQNMyWTCXFPvmxHL6bwf9P7CmC8QOBcyaq16C6DfaeFWjqUQ8UsoqmKh4S9ro.t8vC2pJ673RSHDhb_GnlMICPlD0jOXH";
+        String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Content-Type", "application/json");
