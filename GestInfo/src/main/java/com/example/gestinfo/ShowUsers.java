@@ -306,7 +306,7 @@ public class ShowUsers extends Application {
                 try {
                     // Realizar la consulta para verificar si hay casos del usuario seleccionado
                     String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status,Id+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-                    String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
+                    String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
                     String response = executeQuery(queryUrl, bearerToken);
 
                     // Procesar la respuesta para verificar si hay casos
@@ -375,7 +375,7 @@ public class ShowUsers extends Application {
 
         try {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-            String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
+            String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
             String response = executeQuery(queryUrl, bearerToken);
 
             ObservableList<CaseInfo> caseList = FXCollections.observableArrayList();
@@ -409,7 +409,7 @@ public class ShowUsers extends Application {
         caseRoot.setPadding(new Insets(20));
         caseRoot.getChildren().addAll(caseTable, modifyStatusButton);
 
-        Scene caseScene = new Scene(caseRoot, 400, 300);
+        Scene caseScene = new Scene(caseRoot, 410, 300);
         caseStage.setScene(caseScene);
         caseStage.showAndWait();
     }
@@ -464,7 +464,7 @@ public class ShowUsers extends Application {
     
     private void actualizarEstadoCaso(CaseInfo selectedCase, String newStatus) throws IOException {
         String url = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Case/" + selectedCase.getCaseId();
-        String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
+        String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
         String data = "{\"Status\": \"" + newStatus + "\"}";
     
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -546,7 +546,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
+        String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -610,7 +610,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
+            String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
