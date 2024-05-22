@@ -1,22 +1,6 @@
 package com.example.gestinfo;
 
-import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +21,32 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
+import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 public class ShowUsers extends Application {
 
     private static TableView<User> userTable;
@@ -48,7 +58,7 @@ public class ShowUsers extends Application {
 
     static {
         try {
-            // Cargar roles.txt desde resources
+            // Cargar los roles desde el txt
             loadRoleNames("/com/example/gestinfo/roles.txt");
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,57 +87,52 @@ public class ShowUsers extends Application {
     @SuppressWarnings("unchecked")
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
-        // Configurar el layout principal
+        
         VBox root = new VBox();
         root.setSpacing(20);
         root.setStyle("-fx-background-color: #f0f0f0;");
 
         MenuBar menuBar = new MenuBar();
 
-        // Menú "Salir"
         Menu salirMenu = new Menu("Salir");
         MenuItem salirProgramaItem = new MenuItem("Salir del programa");
         salirProgramaItem.setOnAction(event -> {
-            // Lógica para salir del programa
+            
             System.exit(0);
         });
         salirMenu.getItems().add(salirProgramaItem);
 
-        // Menú "Volver"
+        
         Menu volverMenu = new Menu("Volver");
         MenuItem volverCuentasItem = new MenuItem("Volver a las cuentas");
         volverCuentasItem.setOnAction(event -> {
-            // Cerrar la ventana actual de ShowUsers
+            
             primaryStage.close();
         });
         volverMenu.getItems().add(volverCuentasItem);
 
-        // Agregar los menús al MenuBar
         menuBar.getMenus().addAll(salirMenu, volverMenu);
 
-        // Crear el campo de búsqueda
         searchField = new TextField();
         searchField.setPromptText("Buscar por nombre");
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterUsers(newValue));
 
-        // Crear el botón de restablecer
         Button resetButton = new Button("Restablecer");
         resetButton.setOnAction(event -> {
             // Limpiar el campo de búsqueda y restablecer la tabla
             searchField.clear();
-            userTable.setItems(originalUserList); // Restablecer la tabla con la lista original de usuarios
+            userTable.setItems(originalUserList); // Restablece la tabla con los datos obtenidos de nuevo en la query
         });
 
-        // Crear el contenedor para el campo de búsqueda y el botón de restablecer
         HBox searchContainer = new HBox(10, searchField, resetButton);
         searchContainer.setPrefWidth(350);
         HBox.setHgrow(searchField, Priority.ALWAYS);
         searchContainer.setAlignment(Pos.CENTER);
-        searchContainer.setPadding(new Insets(0, 10, 0, 10)); // Establecer un margen izquierdo y derecho de 10 píxeles
+        searchContainer.setPadding(new Insets(0, 10, 0, 10));
 
 
 
-        // Crear la tabla para mostrar los IDs y los Names
+        // Crear la tabla para mostrar los IDs y los nombres de los usuario
         userTable = new TableView<>();
         userTable.setStyle("-fx-background-color: white;");
 
@@ -142,10 +147,10 @@ public class ShowUsers extends Application {
             String roleId = cellData.getValue().getUserRoleId();
             // Verificar si el ID del rol está en el mapa
             if (roleNames.containsKey(roleId)) {
-                // Si está en el mapa, devuelve el nombre del rol correspondiente
+                
                 return new SimpleStringProperty(roleNames.get(roleId));
             } else {
-                // De lo contrario, devuelve el ID del rol
+                
                 return new SimpleStringProperty(roleId);
             }
         });
@@ -160,14 +165,11 @@ public class ShowUsers extends Application {
 
         executeAndDisplayResults(primaryStage);
 
-        // Establecer la prioridad de crecimiento vertical de la tabla
         VBox.setVgrow(userTable, Priority.ALWAYS);
 
-        // Crear el botón de editar
         Button editButton = new Button("Editar");
         editButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
 
-        // Configurar el evento del botón de editar
         editButton.setOnAction(event -> {
             User selectedUser = userTable.getSelectionModel().getSelectedItem();
             if (selectedUser != null) {
@@ -179,15 +181,12 @@ public class ShowUsers extends Application {
                 editRoot.setAlignment(Pos.CENTER);
                 editRoot.setPadding(new Insets(20));
     
-                // Campos para editar el nombre y apellidos del usuario
                 TextField firstNameField = new TextField(selectedUser.getFirstName());
                 TextField lastNameField = new TextField(selectedUser.getLastName());
     
-                // ComboBox para seleccionar el userRoleId
                 ComboBox<String> roleIdComboBox = new ComboBox<>();
                 roleIdComboBox.setPromptText("Seleccionar rol");
     
-                // Agregar los roles disponibles al ComboBox
                 roleIdComboBox.getItems().addAll(roleNames.values());
                 roleIdComboBox.setValue(roleNames.get(selectedUser.getUserRoleId()));
     
@@ -195,16 +194,17 @@ public class ShowUsers extends Application {
                 saveButton.setOnAction(saveEvent -> {
                     selectedUser.setFirstName(firstNameField.getText());
                     selectedUser.setLastName(lastNameField.getText());
-                    // Actualizar el userRoleId con el valor seleccionado en el ComboBox
                     selectedUser.setUserRoleId(getKeyFromValue(roleNames, roleIdComboBox.getValue()));
-                    // Actualizar el usuario en Salesforce
+
+                    // Actualizar el usuario que hayamos elegido en Salesforce y en la tabla de mi programa
                     try {
                         String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
                         String requestBody = "{\"FirstName\": \"" + selectedUser.getFirstName() + "\", \"LastName\": \"" + selectedUser.getLastName() + "\", \"UserRoleId\": \"" + selectedUser.getUserRoleId() + "\"}";
                         executePatchRequest(updateUrl, requestBody);
+
                         // Actualizar la tabla para reflejar los cambios
                         userTable.refresh();
-                        // Cerrar la ventana de edición
+                        
                         editStage.close();
                     } catch (IOException e) {
                         mostrarMensajeError("Error al actualizar el usuario en Salesforce.", editStage);
@@ -217,81 +217,73 @@ public class ShowUsers extends Application {
                 editStage.setScene(editScene);
                 editStage.showAndWait();
             } else {
-                // Mostrar un mensaje de error si no se selecciona ningún usuario
+                
                 mostrarMensajeError("Por favor, selecciona un usuario para editar.", primaryStage);
             }
         });
 
-        // Crear el botón de borrar
+        
         Button activateButton = new Button("Activar");
         activateButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
 
-        // Configurar el evento del botón de borrar
+        
         activateButton.setOnAction(event -> {
-            // Obtener el usuario seleccionado
+            // Obtengo el usuario que hayamos seleccionado
             User selectedUser = userTable.getSelectionModel().getSelectedItem();
             if (selectedUser != null) {
-                // Mostrar un diálogo de confirmación antes de borrar
+
+                //Mensaje para confirmar que queremos activar este usuario
                 Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmationDialog.setTitle("Confirmación de activación");
                 confirmationDialog.setHeaderText("¿Estás seguro de que quieres activar a este usuario?");
 
-                // Obtener la respuesta del usuario desde el diálogo de confirmación
                 Optional<ButtonType> result = confirmationDialog.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    // Cambiar el campo IsActive a null
+
                     selectedUser.setIsActive(true);
                     
-                    // Actualizar el usuario en Salesforce
                     try {
                         String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
                         String requestBody = "{\"IsActive\": true}";
                         executePatchRequest(updateUrl, requestBody);
-                        // Actualizar la tabla para reflejar los cambios
                         userTable.refresh();
                     } catch (IOException e) {
                         mostrarMensajeError("Error al actualizar el usuario en Salesforce.", primaryStage);
                     }
                 }
             } else {
-                // Mostrar un mensaje de error si no se selecciona ningún usuario
                 mostrarMensajeError("Por favor, selecciona un usuario para activar.", primaryStage);
             }
         });
 
-        // Crear el botón de desactivar
         Button desactivateButton = new Button("Desactivar");
         desactivateButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
-
-        // Configurar el evento del botón de desactivar
         desactivateButton.setOnAction(event -> {
-            // Obtener el usuario seleccionado
+            
             User selectedUser = userTable.getSelectionModel().getSelectedItem();
             if (selectedUser != null) {
-                // Mostrar un diálogo de confirmación antes de desactivar
+                
                 Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmationDialog.setTitle("Confirmación de desactivación");
                 confirmationDialog.setHeaderText("¿Estás seguro de que quieres desactivar a este usuario?");
 
-                // Obtener la respuesta del usuario desde el diálogo de confirmación
                 Optional<ButtonType> result = confirmationDialog.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    // Cambiar el campo IsActive a null
+                    
                     selectedUser.setIsActive(false);
                     
-                    // Actualizar el usuario en Salesforce
                     try {
                         String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/User/" + selectedUser.getId();
                         String requestBody = "{\"IsActive\": false}";
                         executePatchRequest(updateUrl, requestBody);
-                        // Actualizar la tabla para reflejar los cambios
+                        
                         userTable.refresh();
                     } catch (IOException e) {
                         mostrarMensajeError("Error al actualizar el usuario en Salesforce.", primaryStage);
                     }
                 }
             } else {
-                // Mostrar un mensaje de error si no se selecciona ningún usuario
+                
                 mostrarMensajeError("Por favor, selecciona un usuario para desactivar.", primaryStage);
             }
         });
@@ -299,22 +291,20 @@ public class ShowUsers extends Application {
         Button caseButton = new Button("Ver casos");
         caseButton.setStyle("-fx-background-color: #ffc107; -fx-text-fill: white;");
 
-        // Configurar el evento del botón de ver casos
         caseButton.setOnAction(event -> {
             User selectedUser = userTable.getSelectionModel().getSelectedItem();
             if (selectedUser != null) {
                 try {
-                    // Realizar la consulta para verificar si hay casos del usuario seleccionado
+                    
                     String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status,Id+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
                     String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
                     String response = executeQuery(queryUrl, bearerToken);
 
-                    // Procesar la respuesta para verificar si hay casos
                     if (response.contains("\"totalSize\":0")) {
-                        // No hay casos, mostrar un mensaje de error
+                        
                         mostrarMensajeError("El usuario seleccionado no tiene ningún caso asignado.", primaryStage);
                     } else {
-                        // Hay casos, abrir la ventana de casos
+                        
                         abrirVentanaCasos(selectedUser);
                     }
                 } catch (IOException e) {
@@ -325,33 +315,25 @@ public class ShowUsers extends Application {
             }
         });
 
-        // Crear un HBox para colocar los botones uno al lado del otro debajo de la tabla
+        
         HBox buttonContainer = new HBox();
         buttonContainer.setAlignment(Pos.CENTER);
         buttonContainer.setSpacing(10); // Espacio entre los botones
         buttonContainer.getChildren().addAll(activateButton, editButton, desactivateButton, caseButton);
 
+        VBox.setMargin(buttonContainer, new Insets(0, 0, 10, 0));
 
-
-        // Establecer el margen inferior del VBox
-        VBox.setMargin(buttonContainer, new Insets(0, 0, 10, 0)); // 10 píxeles de margen inferior
-
-        // Agregar el VBox que contiene el botón debajo de la tabla
         root.getChildren().addAll(menuBar, searchContainer, userTable, buttonContainer);
 
-        // Configurar la escena
         Scene scene = new Scene(root);
 
-        // Maximizar la ventana
         primaryStage.setMaximized(true);
         primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
 
-        // Mostrar la ventana maximizada
         primaryStage.setScene(scene);
         primaryStage.setTitle("GestInfo");
         primaryStage.show();
 
-        // Cerrar la ventana de SalesforceOAuth si está abierta
         Stage salesforceOAuthStage = SalesforceOAuth.getStage();
         if (salesforceOAuthStage != null) {
             salesforceOAuthStage.close();
@@ -431,12 +413,11 @@ public class ShowUsers extends Application {
         saveButton.setOnAction(event -> {
             String newStatus = statusComboBox.getValue();
             if (newStatus != null && !newStatus.isEmpty()) {
-                // Mostrar un diálogo de confirmación antes de guardar
+                
                 Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmationDialog.setTitle("Confirmación de cambio de estado");
                 confirmationDialog.setHeaderText("¿Estás seguro de que quieres cambiar el estado del caso?");
     
-                // Obtener la respuesta del usuario desde el diálogo de confirmación
                 Optional<ButtonType> result = confirmationDialog.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     try {
@@ -472,17 +453,14 @@ public class ShowUsers extends Application {
         httpPatch.addHeader("Content-Type", "application/json");
         httpPatch.addHeader("Authorization", "Bearer " + bearerToken);
     
-        // Configurar el cuerpo de la solicitud
         StringEntity entity = new StringEntity(data);
         httpPatch.setEntity(entity);
     
-        // Ejecutar la solicitud y obtener la respuesta
         CloseableHttpResponse response = httpClient.execute(httpPatch);
         int statusCode = response.getStatusLine().getStatusCode();
     
-        // Manejar la respuesta
         if (statusCode == 200 || statusCode == 204) {
-            // La operación PATCH se realizó correctamente
+            
         } else {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "utf-8"))) {
                 StringBuilder responseContent = new StringBuilder();
@@ -517,6 +495,7 @@ public class ShowUsers extends Application {
             return subject.get();
         }
     
+        @SuppressWarnings("exports")
         public SimpleStringProperty subjectProperty() {
             return subject;
         }
@@ -529,6 +508,7 @@ public class ShowUsers extends Application {
             this.stage.set(stage);
         }
     
+        @SuppressWarnings("exports")
         public SimpleStringProperty stageProperty() {
             return stage;
         }
@@ -545,7 +525,7 @@ public class ShowUsers extends Application {
     }
 
     private void executePatchRequest(String url, String data) throws IOException {
-        // Token de portador
+        
         String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -553,18 +533,13 @@ public class ShowUsers extends Application {
         httpPatch.addHeader("Content-Type", "application/json");
         httpPatch.addHeader("Authorization", "Bearer " + bearerToken);
 
-        // Configurar el cuerpo de la solicitud
         StringEntity entity = new StringEntity(data);
         httpPatch.setEntity(entity);
 
-        // Ejecutar la solicitud y obtener la respuesta
         CloseableHttpResponse response = httpClient.execute(httpPatch);
         int statusCode = response.getStatusLine().getStatusCode();
 
-        // Verificar el código de estado de la respuesta
         if (statusCode == 200 || statusCode == 204) {
-            // La operación PATCH se realizó correctamente
-            // Aquí puedes manejar la respuesta si es necesario
         } else {
             throw new IOException("Error al actualizar el usuario. Código de respuesta HTTP: " + statusCode);
         }
@@ -585,10 +560,8 @@ public class ShowUsers extends Application {
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
         connection.setRequestMethod("GET");
 
-        // Agregar el token de portador al encabezado de autorización
         connection.setRequestProperty("Authorization", "Bearer " + bearerToken);
 
-        // Realizar la solicitud GET
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
@@ -606,16 +579,13 @@ public class ShowUsers extends Application {
 
     private static void executeAndDisplayResults(Stage primaryStage) {
         try {
-            // URL de la consulta
+            
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
-            // Token de portador
             String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
     
-            // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
     
-            // Procesar la respuesta y mostrar los IDs y los Names en la tabla
             ObservableList<User> userList = FXCollections.observableArrayList();
     
             Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\",\"FirstName\"\\s*:\\s*\"(.*?)\",\"LastName\"\\s*:\\s*\"(.*?)\",\"UserRoleId\"\\s*:\\s*\"(.*?)\",\"IsActive\"\\s*:\\s*(true|false)");
@@ -630,7 +600,7 @@ public class ShowUsers extends Application {
             }
     
             userTable.setItems(userList);
-            originalUserList = userList; // Guardar la lista original de usuarios
+            originalUserList = userList;
         } catch (IOException e){
             mostrarMensajeError("No se puede conectar a Salesforce.", primaryStage);
         }
@@ -647,19 +617,16 @@ public class ShowUsers extends Application {
     
 
     private static void filterUsers(String searchText) {
-        // Obtener la lista de usuarios original
+
         ObservableList<User> userList = originalUserList;
 
-        // Si el texto de búsqueda está vacío, mostrar todos los usuarios nuevamente
         if (searchText == null || searchText.isEmpty()) {
             userTable.setItems(userList);
             return;
         }
 
-        // Crear una nueva lista para almacenar los usuarios filtrados
         ObservableList<User> filteredList = FXCollections.observableArrayList();
 
-        // Iterar sobre la lista de usuarios y agregar aquellos que coincidan con el criterio de búsqueda
         for (User user : userList) {
             if (user.getFirstName().toLowerCase().contains(searchText.toLowerCase()) ||
                 user.getLastName().toLowerCase().contains(searchText.toLowerCase())) {
@@ -667,7 +634,6 @@ public class ShowUsers extends Application {
             }
         }
 
-        // Establecer la lista filtrada como la nueva lista de elementos de la tabla
         userTable.setItems(filteredList);
     }
 

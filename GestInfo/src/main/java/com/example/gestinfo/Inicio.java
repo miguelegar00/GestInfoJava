@@ -4,6 +4,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -21,8 +25,8 @@ import javafx.stage.Stage;
 
 public class Inicio extends Application {
 
-    // Credenciales de inicio de sesión
-    private static final String USERNAME = "1";
+    // Variables para almacenar las credenciales y el resultado de la consulta
+    private static String USERNAME;
     private static final String PASSWORD = "1";
 
     // Bearer token de acceso a Salesforce
@@ -30,14 +34,20 @@ public class Inicio extends Application {
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
+        // Verificar la conexión a Salesforce y obtener el nombre de usuario
+        if (!verificarConexionSalesforce(SALESFORCE_BEARER_TOKEN)) {
+            mostrarMensajeError("No se puede conectar a Salesforce.");
+            return;
+        }
+
         // Crear la imagen y el ImageView
         Image image = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/2560px-Salesforce.com_logo.svg.png");
         ImageView imageView = new ImageView(image);
 
         // Configurar el tamaño del ImageView
-        imageView.setFitWidth(300); // Ancho de la imagen
-        imageView.setFitHeight(200); // Alto de la imagen
-        imageView.setPreserveRatio(true); // Mantener la proporción de la imagen al cambiar el tamaño
+        imageView.setFitWidth(300);
+        imageView.setFitHeight(200);
+        imageView.setPreserveRatio(true);
 
         // Crear campos de texto para el nombre de usuario y la contraseña
         TextField usernameField = new TextField();
@@ -49,34 +59,25 @@ public class Inicio extends Application {
         Button accederButton = new Button("Acceder");
         accederButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-color: transparent; -fx-border-radius: 5;");
         accederButton.setOnAction(event -> {
-            // Obtener el nombre de usuario y la contraseña ingresados
+            
             String username = usernameField.getText();
             String password = passwordField.getText();
 
             // Verificar las credenciales
             if (username.equals(USERNAME) && password.equals(PASSWORD)) {
-                // Verificar la conexión a Salesforce utilizando el token de acceso
-                boolean conexionExitosa = verificarConexionSalesforce(SALESFORCE_BEARER_TOKEN);
-                if (conexionExitosa) {
-                    // Ejecutar la clase SalesforceOAuth si la conexión es exitosa
-                    SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
-                    try {
-                        salesforceOAuth.start(new Stage());
-                        primaryStage.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // Mostrar un mensaje de error si la conexión falla
-                    mostrarMensajeError("No se puede conectar a Salesforce.");
+                // Ejecutar la clase SalesforceOAuth si la conexión es exitosa
+                SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
+                try {
+                    salesforceOAuth.start(new Stage());
+                    primaryStage.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
-                // Mostrar un mensaje de error si las credenciales son incorrectas
                 mostrarMensajeError("Credenciales incorrectas.");
             }
         });
 
-        // Organizar los campos de texto y el botón en un GridPane
         GridPane loginGrid = new GridPane();
         loginGrid.setAlignment(Pos.CENTER);
         loginGrid.setHgap(10);
@@ -85,14 +86,12 @@ public class Inicio extends Application {
         loginGrid.add(usernameField, 0, 0);
         loginGrid.add(passwordField, 0, 1);
         loginGrid.add(accederButton, 0, 2);
-        // Establecer el margen del botón para moverlo 10 píxeles a la derecha
         GridPane.setMargin(accederButton, new Insets(0, 0, 0, 25));
-
 
         // Configurar el contenedor principal
         BorderPane root = new BorderPane();
-        root.setCenter(imageView); // Colocar la imagen en el centro
-        root.setBottom(loginGrid); // Colocar el formulario debajo de la imagen
+        root.setCenter(imageView);
+        root.setBottom(loginGrid);
 
         // Configurar la escena y mostrar la ventana
         Scene scene = new Scene(root, 400, 400);
@@ -108,21 +107,27 @@ public class Inicio extends Application {
     // Método para verificar la conexión a Salesforce utilizando el token de acceso
     private boolean verificarConexionSalesforce(String accessToken) {
         try {
-            // Crear cliente HTTP
+
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
-            // Crear solicitud GET a una URL de Salesforce
-            HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=SELECT+Id+FROM+User");
+            HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=SELECT+Alias+FROM+User+WHERE+Id='005So000000s4wHIAQ'");
 
-            // Agregar el token de acceso al encabezado de autorización
             httpGet.addHeader("Authorization", "Bearer " + accessToken);
 
-            // Ejecutar la solicitud y obtener la respuesta
             HttpResponse response = httpClient.execute(httpGet);
 
-            // Verificar el código de estado de la respuesta para determinar si la conexión es exitosa
             int statusCode = response.getStatusLine().getStatusCode();
-            return statusCode >= 200 && statusCode < 300;
+            if (statusCode >= 200 && statusCode < 300) {
+                
+                String responseBody = EntityUtils.toString(response.getEntity());
+                
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+                USERNAME = jsonNode.get("records").get(0).get("Alias").asText();
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;

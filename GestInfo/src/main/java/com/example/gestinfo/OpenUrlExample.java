@@ -24,7 +24,6 @@ public class OpenUrlExample {
                 }
                 rt.exec(new String[]{"sh", "-c", cmd.toString()});
             } else {
-                // Si no se puede determinar el sistema operativo, simplemente intenta abrir la URL
                 rt.exec("xdg-open " + url);
             }
         } catch (IOException e) {

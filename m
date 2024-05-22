@@ -1,0 +1,203 @@
+[33mcommit 89c0b95a42ff165462ecf80e7ee06ec2612d20a4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Wed May 22 16:17:07 2024 +0200
+
+    Con el TXT
+
+[33mcommit 6ad93a75ee6a26983640db1631ad053a8e7160e3[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Wed May 22 12:56:45 2024 +0200
+
+    Modificacion de casos
+
+[33mcommit e9fe0d3ca7a34bb8236dd127a4e4a8bad8a454ba[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue May 21 17:54:55 2024 +0200
+
+    Se muestran los casos de los User
+
+[33mcommit 509bce1eb62b2d8d5ffe693645f25e6cc96571ff[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Wed May 15 09:47:56 2024 +0200
+
+    Listado de los casos con sus estados
+
+[33mcommit 01073ffb19ca26ee2f851e043f171c36225dbb79[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue May 14 17:56:17 2024 +0200
+
+    Estado de los Casos
+
+[33mcommit 3be9d241651933118414775bc53804d90d8fd98b[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Mon May 13 18:00:33 2024 +0200
+
+    Todo
+
+[33mcommit 66db8e6bcd2d7e18b8036029584fdcfa7091b0af[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Mon May 13 17:47:29 2024 +0200
+
+    Modificación de roles
+
+[33mcommit f017f6dac5f9aed6439da3b1333ec1801b485c48[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Wed May 8 17:33:00 2024 +0200
+
+    Activación y desactivación de usuarios
+
+[33mcommit a65fb351d28de386d0cabe9143fce88476da96d0[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue May 7 17:58:42 2024 +0200
+
+    Mejor
+
+[33mcommit 964ac29977d2c8e34acb0ed4b4ddcb59cf0e5006[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue May 7 17:02:36 2024 +0200
+
+    Edición Users
+
+[33mcommit 9d6cb6f226f5b9f59fc2b3474e56d7535a2f2d2e[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue May 7 16:06:11 2024 +0200
+
+    0 errores
+
+[33mcommit 9a1bc0153523f7b0526aa96fed904b48eb23ae9a[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue May 7 16:05:40 2024 +0200
+
+    Controlar errores
+
+[33mcommit 1bc98741bbca3e80626bcc895c1a1abd33a7928e[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Mon May 6 18:20:59 2024 +0200
+
+    Botón de editar en los User
+
+[33mcommit dcdf0350d460c95c81a48eada3b5498340fe0d0b[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Fri May 3 14:49:35 2024 +0200
+
+    Algunas correcciones
+
+[33mcommit 12c5e8bdfc8fa65d2155830c7802b77996856801[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Fri May 3 14:42:35 2024 +0200
+
+    Buscar en ambos casos con los márgenes bien puestos
+
+[33mcommit 01663c8a32997df70ade35359a2eeb90fe7b64ef[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Fri May 3 14:22:47 2024 +0200
+
+    Buscador
+
+[33mcommit 7243d44c903f12201921ede1431cd1a1b6b3d621[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Fri May 3 13:48:55 2024 +0200
+
+    Update
+
+[33mcommit 1e1776566ff45b7bafed4005d041511711b52f24[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Fri May 3 13:35:19 2024 +0200
+
+    Con la tabla de Users
+
+[33mcommit 65775fbf3d7803e0b809cf68e68cc45cff1319d3[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Thu May 2 18:30:18 2024 +0200
+
+    Accounts borradas
+
+[33mcommit 25056dcfa3319490089f1353ff848805d63e3b67[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Thu May 2 18:09:34 2024 +0200
+
+    Creacion y edicion de cuentas
+
+[33mcommit ae5de85c14bc56cb6d79a78178182af2b4c477c2[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue Apr 30 18:22:50 2024 +0200
+
+    Editar Account
+
+[33mcommit b04e1f77f7df448f759325131f00e259c3078212[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue Apr 30 13:33:49 2024 +0200
+
+    Todo
+
+[33mcommit a76045034af6725a26aa8f77cf99c492d653f78c[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue Apr 30 11:29:58 2024 +0200
+
+    Tabla de Id y Name
+
+[33mcommit 0b6a6ff798f09884cf9a7cd46748bdb3d77350ea[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Mon Apr 29 15:51:23 2024 +0200
+
+    Funciona el SELECT
+
+[33mcommit f19cfd2565baa2c6a759acb32b7f1bfc34d36517[m
+Author: miguelegar00 <103142682+miguelegar00@users.noreply.github.com>
+Date:   Fri Apr 26 13:29:34 2024 +0200
+
+    No se encontraron registros, es con force-wsc 60.0
+
+[33mcommit 254c9d0b5aa65f914aad935fc948c51cbccf677b[m
+Author: miguelegar00 <103142682+miguelegar00@users.noreply.github.com>
+Date:   Fri Apr 26 12:46:03 2024 +0200
+
+    Error
+
+[33mcommit ddd562a54d1c88fa254e7fe6e462721501040bd2[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Tue Apr 23 10:18:17 2024 +0200
+
+    sin librerias de salesforce pero me da el erro 400
+
+[33mcommit 2d0db554b0fff6287d32bad48d69db369cbbb94d[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Mon Apr 22 17:36:48 2024 +0200
+
+    probablemente funcione
+
+[33mcommit a384d12ef91160eb10cb60f1da2aa9d4b3194862[m
+Author: Miguel Leon <miguelegar00@gmail.com>
+Date:   Thu Apr 11 12:58:45 2024 +0200
+
+    Nuevas modificaciones
+
+[33mcommit 85ee3ef3adb9a8fb22a8e5dd0687e201789ef22f[m
+Author: Miguel Leon Garcia <mleon@SOLUCIONA.LOCAL>
+Date:   Wed Apr 10 18:27:09 2024 +0200
+
+    Bienes y Servicios, Solicitud con masa, Solicitud sin masa
+
+[33mcommit 9441214da19661345a70937f8c0b42bc363bb33c[m
+Author: Miguel Leon Garcia <mleon@SOLUCIONA.LOCAL>
+Date:   Tue Apr 9 18:07:08 2024 +0200
+
+    Sigue con el Maven, pero lo tengo que probar en casa, ya que aquí no tengo java
+
+[33mcommit d2d30cc714d054fab46239a9a45be55bb2fc89b4[m
+Author: Miguel Leon Garcia <mleon@SOLUCIONA.LOCAL>
+Date:   Tue Apr 9 13:29:10 2024 +0200
+
+    Con el Maven nuevo
+
+[33mcommit bfd839d98f85cf4e0a4bac8c2d744ba795c52890[m
+Author: miguelegar00 <103142682+miguelegar00@users.noreply.github.com>
+Date:   Thu Apr 4 11:41:33 2024 +0200
+
+    Update Consumer Details.txt
+
+[33mcommit 7c281bcdb23f64ef75c9b724d967b2d4bdca0b51[m
+Author: miguelegar00 <miguelegar00@gmail.com>
+Date:   Tue Mar 26 16:57:23 2024 +0100
+
+    No me funciona el Client ID
