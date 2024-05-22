@@ -26,7 +26,7 @@ public class Inicio extends Application {
     private static final String PASSWORD = "1";
 
     // Bearer token de acceso a Salesforce
-    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {

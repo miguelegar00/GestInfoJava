@@ -2,7 +2,6 @@ package com.example.gestinfo;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,7 +15,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -43,41 +45,33 @@ public class ShowUsers extends Application {
     private static ObservableList<User> originalUserList;
 
     private static final Map<String, String> roleNames = new HashMap<>();
+
     static {
-        roleNames.put("00ESo0000000ZR7MAM", "Administración");
-        roleNames.put("00E7Q000000gurtUAA", "Análisis");
-        roleNames.put("00E7Q000000guroUAA", "Contestaciones");
-        roleNames.put("00ESo0000000ZQnMAM", "Dirección");
-        roleNames.put("00ESo0000000ZQoMAM", "Dirección Comercial");
-        roleNames.put("00ESo0000000ZQpMAM", "Dirección Financiera");
-        roleNames.put("00ESo0000000ZQqMAM", "Dirección Legal");
-        roleNames.put("00E7Q000000gurZUAQ", "Documentación");
-        roleNames.put("00E7Q000000guryUAA", "Ejecuciones");
-        roleNames.put("00ESo0000000ZR8MAM", "Finanzas");
-        roleNames.put("00E7Q000000gv5XUAQ", "Gestores de cartera");
-        roleNames.put("00E7Q000000gv5YUAQ", "Gestores de Cartera Seniors");
-        roleNames.put("00E7Q000000gv5ZUAQ", "Gestores de Inactivos");
-        roleNames.put("00E7Q000000gwkSUAQ", "Gestores de Onboarding");
-        roleNames.put("00ESo0000000ZQrMAM", "Gestores Inactivos");
-        roleNames.put("00ESo000000ElBxMAK", "Gestor de Poder Notarial");
-        roleNames.put("00E7Q000000gv5WUAQ", "Jefe de equipo Gestores");
-        roleNames.put("00E7Q000000gurPUAQ", "Jefe de equipo legal");
-        roleNames.put("00ESo0000000ZQtMAM", "Jefe de equipo Preventa");
-        roleNames.put("00ESo0000000ZQuMAM", "Jefe de equipo Venta");
-        roleNames.put("00ESo0000000ZQvMAM", "Jefe equipo Administración");
-        roleNames.put("00ESo0000000ZQwMAM", "Jefe equipo Ejecuciones");
-        roleNames.put("00ESo0000000ZQsMAM", "Jefe Equipo Finanzas");
-        roleNames.put("00E7Q000000gus3UAA", "LSO");
-        roleNames.put("00ESo0000000ZQxMAM", "Marketing");
-        roleNames.put("00ESo0000000ZQyMAM", "Negociación No Reclamable");
-        roleNames.put("00ESo0000000ZQzMAM", "Negociación Reclamable");
-        roleNames.put("00ESo0000000ZR0MAM", "Operaciones");
-        roleNames.put("00ESo0000000ZR1MAM", "Preventa Junior");
-        roleNames.put("00ESo0000000ZR2MAM", "Preventa Senior");
-        roleNames.put("00ESo0000000ZR3MAM", "RRHH");
-        roleNames.put("00ESo0000000ZR5MAM", "Venta deuda mayor");
-        roleNames.put("00ESo0000000ZR6MAM", "Venta deuda menor");
-        roleNames.put("00ESo0000000ZR4MAM", "Venta LSO");
+        try {
+            // Cargar roles.txt desde resources
+            loadRoleNames("/com/example/gestinfo/roles.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading role names: " + e.getMessage());
+        }
+    }
+
+    private static void loadRoleNames(String filename) throws IOException {
+        InputStream inputStream = ShowUsers.class.getResourceAsStream(filename);
+        if (inputStream == null) {
+            System.err.println("File not found: " + filename);
+            return;
+        }
+    
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("=");
+                if (parts.length == 2) {
+                    roleNames.put(parts[0], decodeString(parts[1]));
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -311,8 +305,8 @@ public class ShowUsers extends Application {
             if (selectedUser != null) {
                 try {
                     // Realizar la consulta para verificar si hay casos del usuario seleccionado
-                    String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-                    String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+                    String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status,Id+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
+                    String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
                     String response = executeQuery(queryUrl, bearerToken);
 
                     // Procesar la respuesta para verificar si hay casos
@@ -363,7 +357,6 @@ public class ShowUsers extends Application {
             salesforceOAuthStage.close();
         }
     }
-
     
     @SuppressWarnings("unchecked")
     private void abrirVentanaCasos(User selectedUser) {
@@ -375,63 +368,167 @@ public class ShowUsers extends Application {
         TableColumn<CaseInfo, String> subjectColumn = new TableColumn<>("Asunto");
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
 
-        // Nueva columna para el campo "Estado"
         TableColumn<CaseInfo, String> stageColumn = new TableColumn<>("Estado");
         stageColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
 
-        caseTable.getColumns().addAll(subjectColumn, stageColumn); // Agregar la nueva columna a la tabla
+        caseTable.getColumns().addAll(subjectColumn, stageColumn);
 
         try {
-            // Realizar la consulta de los casos del usuario seleccionado
-            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-            String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
+            String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
             String response = executeQuery(queryUrl, bearerToken);
 
-            // Procesar la respuesta y agregar los casos a la tabla
             ObservableList<CaseInfo> caseList = FXCollections.observableArrayList();
-            Pattern pattern = Pattern.compile("\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Status\"\\s*:\\s*\"(.*?)\"");
+            Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\".*?\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Status\"\\s*:\\s*\"(.*?)\"");
             Matcher matcher = pattern.matcher(response);
             while (matcher.find()) {
-                String subject = decodeString(matcher.group(1));
-                String stage = decodeString(matcher.group(2));
-                caseList.add(new CaseInfo(subject, stage));
+                String id = matcher.group(1);
+                String subject = decodeString(matcher.group(2));
+                String stage = decodeString(matcher.group(3));
+                caseList.add(new CaseInfo(id, subject, stage));
             }
             caseTable.setItems(caseList);
         } catch (IOException e) {
             mostrarMensajeError("Error al obtener los casos del usuario.", caseStage);
         }
+        Button modifyStatusButton = new Button("Modificar Estado");
+        modifyStatusButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
+        modifyStatusButton.setOnAction(event -> {
+            CaseInfo selectedCase = caseTable.getSelectionModel().getSelectedItem();
+            if (selectedCase != null) {
+                System.out.println("Caso seleccionado: " + selectedCase.getCaseId() + " - " + selectedCase.getSubject());
+                abrirModificarEstadoVentana(selectedCase);
+            } else {
+                mostrarMensajeError("Por favor, selecciona un caso para modificar su estado.", caseStage);
+            }
+        });
+
 
         VBox caseRoot = new VBox(10);
         caseRoot.setAlignment(Pos.CENTER);
         caseRoot.setPadding(new Insets(20));
-        caseRoot.getChildren().add(caseTable);
+        caseRoot.getChildren().addAll(caseTable, modifyStatusButton);
 
         Scene caseScene = new Scene(caseRoot, 400, 300);
         caseStage.setScene(caseScene);
         caseStage.showAndWait();
     }
 
-    public static class CaseInfo {
-        private final SimpleStringProperty subject;
-        private final SimpleStringProperty stage; // Nueva propiedad para el campo "Estado"
-
-        public CaseInfo(String subject, String stage) {
-            this.subject = new SimpleStringProperty(subject);
-            this.stage = new SimpleStringProperty(stage); // Inicializar la nueva propiedad
+    private void abrirModificarEstadoVentana(CaseInfo selectedCase) {
+        Stage modifyStage = new Stage();
+        modifyStage.initModality(Modality.APPLICATION_MODAL);
+        modifyStage.setTitle("Modificar estado del caso");
+    
+        Label caseLabel = new Label("Asunto: " + selectedCase.getSubject());
+        Label statusLabel = new Label("Estado actual: " + selectedCase.getStage());
+    
+        ComboBox<String> statusComboBox = new ComboBox<>();
+        statusComboBox.getItems().addAll("Esperando respuesta del cliente", "En Proceso", "Completado Ganado", "Completado Perdido", "Revisado", "Sin Tocar");
+        statusComboBox.setValue(selectedCase.getStage());
+    
+        Button saveButton = new Button("Guardar");
+        saveButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
+        saveButton.setOnAction(event -> {
+            String newStatus = statusComboBox.getValue();
+            if (newStatus != null && !newStatus.isEmpty()) {
+                // Mostrar un diálogo de confirmación antes de guardar
+                Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmationDialog.setTitle("Confirmación de cambio de estado");
+                confirmationDialog.setHeaderText("¿Estás seguro de que quieres cambiar el estado del caso?");
+    
+                // Obtener la respuesta del usuario desde el diálogo de confirmación
+                Optional<ButtonType> result = confirmationDialog.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    try {
+                        actualizarEstadoCaso(selectedCase, newStatus);
+                        selectedCase.setStage(newStatus);
+                        modifyStage.close();
+                    } catch (IOException e) {
+                        mostrarMensajeError("Error al actualizar el estado del caso: " + e.getMessage(), modifyStage);
+                    }
+                }
+            } else {
+                mostrarMensajeError("Seleccione un estado válido.", modifyStage);
+            }
+        });
+    
+        VBox modifyRoot = new VBox(10);
+        modifyRoot.setAlignment(Pos.CENTER);
+        modifyRoot.setPadding(new Insets(20));
+        modifyRoot.getChildren().addAll(caseLabel, statusLabel, statusComboBox, saveButton);
+    
+        Scene modifyScene = new Scene(modifyRoot, 300, 200);
+        modifyStage.setScene(modifyScene);
+        modifyStage.showAndWait();
+    }
+    
+    private void actualizarEstadoCaso(CaseInfo selectedCase, String newStatus) throws IOException {
+        String url = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Case/" + selectedCase.getCaseId();
+        String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
+        String data = "{\"Status\": \"" + newStatus + "\"}";
+    
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPatch httpPatch = new HttpPatch(url);
+        httpPatch.addHeader("Content-Type", "application/json");
+        httpPatch.addHeader("Authorization", "Bearer " + bearerToken);
+    
+        // Configurar el cuerpo de la solicitud
+        StringEntity entity = new StringEntity(data);
+        httpPatch.setEntity(entity);
+    
+        // Ejecutar la solicitud y obtener la respuesta
+        CloseableHttpResponse response = httpClient.execute(httpPatch);
+        int statusCode = response.getStatusLine().getStatusCode();
+    
+        // Manejar la respuesta
+        if (statusCode == 200 || statusCode == 204) {
+            // La operación PATCH se realizó correctamente
+        } else {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "utf-8"))) {
+                StringBuilder responseContent = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    responseContent.append(responseLine.trim());
+                }
+                throw new IOException("Error al actualizar el estado del caso: " + responseContent.toString());
+            }
         }
-
+    }
+    
+    
+    
+    
+    public static class CaseInfo {
+        private final SimpleStringProperty id;
+        private final SimpleStringProperty subject;
+        private final SimpleStringProperty stage;
+    
+        public CaseInfo(String id, String subject, String stage) {
+            this.id = new SimpleStringProperty(id);
+            this.subject = new SimpleStringProperty(subject);
+            this.stage = new SimpleStringProperty(stage);
+        }
+    
+        public String getCaseId() {
+            return id.get();
+        }
+    
         public String getSubject() {
             return subject.get();
         }
-
+    
         public SimpleStringProperty subjectProperty() {
             return subject;
         }
-
+    
         public String getStage() {
             return stage.get();
         }
-
+    
+        public void setStage(String stage) {
+            this.stage.set(stage);
+        }
+    
         public SimpleStringProperty stageProperty() {
             return stage;
         }
@@ -449,7 +546,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         // Token de portador
-        String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+        String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -513,7 +610,7 @@ public class ShowUsers extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+            String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);

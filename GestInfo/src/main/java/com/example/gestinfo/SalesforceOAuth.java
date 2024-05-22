@@ -199,7 +199,7 @@ public class SalesforceOAuth extends Application {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,Cliente_de__c,Phone+FROM+Account+WHERE+Id+!=+null";
     
             // Token de portador
-            String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+            String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
     
             // Realizar la consulta
             String response = executeQuery(queryUrl, bearerToken);
@@ -290,7 +290,7 @@ public class SalesforceOAuth extends Application {
     }
 
     private void executePatchRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+        String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
         httpPatch.addHeader("Content-Type", "application/json");
@@ -314,7 +314,7 @@ public class SalesforceOAuth extends Application {
     }
 
     public static void executePostRequest(String url, String data) throws IOException {
-        String bearerToken = "00DUB000001QzdZ!AQEAQJ8axYX9GDuXCqEgbNCmkLeAQAnpRx5s4oawp5Dz_Rr4Fvg8sYnzj7N5j2BFWPfhTyzZTU4vGeyKWCcTGW_8YzJLcp2d";
+        String bearerToken = "00DUB000001QzdZ!AQEAQA2mB_DhcpYRmiAvF1vvEO3w325hWyTz7UN0brSUKWw6M3AX10Qdo4N78VpCk0A7vWxxxmPQ43X2hlnJDDMd8CEG1Q.N";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Content-Type", "application/json");
