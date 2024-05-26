@@ -39,7 +39,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -48,6 +47,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ShowUsers extends Application {
+
+    ShowCases showCases = new ShowCases();
+    
+    private static SalesforceTokenManager tokenManager = new SalesforceTokenManager();
 
     private static TableView<User> userTable;
     private static TextField searchField;
@@ -297,7 +300,7 @@ public class ShowUsers extends Application {
                 try {
                     
                     String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Subject,Status,Id+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-                    String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
+                    String bearerToken = tokenManager.getNewAccessToken();
                     String response = executeQuery(queryUrl, bearerToken);
 
                     if (response.contains("\"totalSize\":0")) {
@@ -305,7 +308,7 @@ public class ShowUsers extends Application {
                         mostrarMensajeError("El usuario seleccionado no tiene ningún caso asignado.", primaryStage);
                     } else {
                         
-                        abrirVentanaCasos(selectedUser);
+                        showCases.abrirVentanaCasos(selectedUser);
                     }
                 } catch (IOException e) {
                     mostrarMensajeError("Error al verificar los casos del usuario.", primaryStage);
@@ -314,7 +317,6 @@ public class ShowUsers extends Application {
                 mostrarMensajeError("Por favor, selecciona un usuario para ver los casos.", primaryStage);
             }
         });
-
         
         HBox buttonContainer = new HBox();
         buttonContainer.setAlignment(Pos.CENTER);
@@ -340,181 +342,6 @@ public class ShowUsers extends Application {
         }
     }
     
-    @SuppressWarnings("unchecked")
-    private void abrirVentanaCasos(User selectedUser) {
-        Stage caseStage = new Stage();
-        caseStage.initModality(Modality.APPLICATION_MODAL);
-        caseStage.setTitle("Casos de " + selectedUser.getFirstName() + " " + selectedUser.getLastName());
-
-        TableView<CaseInfo> caseTable = new TableView<>();
-        TableColumn<CaseInfo, String> subjectColumn = new TableColumn<>("Asunto");
-        subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
-
-        TableColumn<CaseInfo, String> stageColumn = new TableColumn<>("Estado");
-        stageColumn.setCellValueFactory(new PropertyValueFactory<>("stage"));
-
-        caseTable.getColumns().addAll(subjectColumn, stageColumn);
-
-        try {
-            String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-            String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
-            String response = executeQuery(queryUrl, bearerToken);
-
-            ObservableList<CaseInfo> caseList = FXCollections.observableArrayList();
-            Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\".*?\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Status\"\\s*:\\s*\"(.*?)\"");
-            Matcher matcher = pattern.matcher(response);
-            while (matcher.find()) {
-                String id = matcher.group(1);
-                String subject = decodeString(matcher.group(2));
-                String stage = decodeString(matcher.group(3));
-                caseList.add(new CaseInfo(id, subject, stage));
-            }
-            caseTable.setItems(caseList);
-        } catch (IOException e) {
-            mostrarMensajeError("Error al obtener los casos del usuario.", caseStage);
-        }
-        Button modifyStatusButton = new Button("Modificar Estado");
-        modifyStatusButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
-        modifyStatusButton.setOnAction(event -> {
-            CaseInfo selectedCase = caseTable.getSelectionModel().getSelectedItem();
-            if (selectedCase != null) {
-                System.out.println("Caso seleccionado: " + selectedCase.getCaseId() + " - " + selectedCase.getSubject());
-                abrirModificarEstadoVentana(selectedCase);
-            } else {
-                mostrarMensajeError("Por favor, selecciona un caso para modificar su estado.", caseStage);
-            }
-        });
-
-
-        VBox caseRoot = new VBox(10);
-        caseRoot.setAlignment(Pos.CENTER);
-        caseRoot.setPadding(new Insets(20));
-        caseRoot.getChildren().addAll(caseTable, modifyStatusButton);
-
-        Scene caseScene = new Scene(caseRoot, 410, 300);
-        caseStage.setScene(caseScene);
-        caseStage.showAndWait();
-    }
-
-    private void abrirModificarEstadoVentana(CaseInfo selectedCase) {
-        Stage modifyStage = new Stage();
-        modifyStage.initModality(Modality.APPLICATION_MODAL);
-        modifyStage.setTitle("Modificar estado del caso");
-    
-        Label caseLabel = new Label("Asunto: " + selectedCase.getSubject());
-        Label statusLabel = new Label("Estado actual: " + selectedCase.getStage());
-    
-        ComboBox<String> statusComboBox = new ComboBox<>();
-        statusComboBox.getItems().addAll("Esperando respuesta del cliente", "En Proceso", "Completado Ganado", "Completado Perdido", "Revisado", "Sin Tocar");
-        statusComboBox.setValue(selectedCase.getStage());
-    
-        Button saveButton = new Button("Guardar");
-        saveButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
-        saveButton.setOnAction(event -> {
-            String newStatus = statusComboBox.getValue();
-            if (newStatus != null && !newStatus.isEmpty()) {
-                
-                Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmationDialog.setTitle("Confirmación de cambio de estado");
-                confirmationDialog.setHeaderText("¿Estás seguro de que quieres cambiar el estado del caso?");
-    
-                Optional<ButtonType> result = confirmationDialog.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    try {
-                        actualizarEstadoCaso(selectedCase, newStatus);
-                        selectedCase.setStage(newStatus);
-                        modifyStage.close();
-                    } catch (IOException e) {
-                        mostrarMensajeError("Error al actualizar el estado del caso: " + e.getMessage(), modifyStage);
-                    }
-                }
-            } else {
-                mostrarMensajeError("Seleccione un estado válido.", modifyStage);
-            }
-        });
-    
-        VBox modifyRoot = new VBox(10);
-        modifyRoot.setAlignment(Pos.CENTER);
-        modifyRoot.setPadding(new Insets(20));
-        modifyRoot.getChildren().addAll(caseLabel, statusLabel, statusComboBox, saveButton);
-    
-        Scene modifyScene = new Scene(modifyRoot, 300, 200);
-        modifyStage.setScene(modifyScene);
-        modifyStage.showAndWait();
-    }
-    
-    private void actualizarEstadoCaso(CaseInfo selectedCase, String newStatus) throws IOException {
-        String url = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Case/" + selectedCase.getCaseId();
-        String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
-        String data = "{\"Status\": \"" + newStatus + "\"}";
-    
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPatch httpPatch = new HttpPatch(url);
-        httpPatch.addHeader("Content-Type", "application/json");
-        httpPatch.addHeader("Authorization", "Bearer " + bearerToken);
-    
-        StringEntity entity = new StringEntity(data);
-        httpPatch.setEntity(entity);
-    
-        CloseableHttpResponse response = httpClient.execute(httpPatch);
-        int statusCode = response.getStatusLine().getStatusCode();
-    
-        if (statusCode == 200 || statusCode == 204) {
-            
-        } else {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "utf-8"))) {
-                StringBuilder responseContent = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    responseContent.append(responseLine.trim());
-                }
-                throw new IOException("Error al actualizar el estado del caso: " + responseContent.toString());
-            }
-        }
-    }
-    
-    
-    
-    
-    public static class CaseInfo {
-        private final SimpleStringProperty id;
-        private final SimpleStringProperty subject;
-        private final SimpleStringProperty stage;
-    
-        public CaseInfo(String id, String subject, String stage) {
-            this.id = new SimpleStringProperty(id);
-            this.subject = new SimpleStringProperty(subject);
-            this.stage = new SimpleStringProperty(stage);
-        }
-    
-        public String getCaseId() {
-            return id.get();
-        }
-    
-        public String getSubject() {
-            return subject.get();
-        }
-    
-        @SuppressWarnings("exports")
-        public SimpleStringProperty subjectProperty() {
-            return subject;
-        }
-    
-        public String getStage() {
-            return stage.get();
-        }
-    
-        public void setStage(String stage) {
-            this.stage.set(stage);
-        }
-    
-        @SuppressWarnings("exports")
-        public SimpleStringProperty stageProperty() {
-            return stage;
-        }
-    }
-
-
     private <K, V> K getKeyFromValue(Map<K, V> map, V value) {
         for (Map.Entry<K, V> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
@@ -526,7 +353,7 @@ public class ShowUsers extends Application {
 
     private void executePatchRequest(String url, String data) throws IOException {
         
-        String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
+        String bearerToken = tokenManager.getNewAccessToken();
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
@@ -544,7 +371,6 @@ public class ShowUsers extends Application {
             throw new IOException("Error al actualizar el usuario. Código de respuesta HTTP: " + statusCode);
         }
     }
-
 
     private static String decodeString(String encodedString) {
         try {
@@ -582,7 +408,7 @@ public class ShowUsers extends Application {
             
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,FirstName,LastName,UserRoleId,IsActive+FROM+User+WHERE+UserRoleId+!=+null+AND+ProfileId+!=+null+AND+UserRoleId+!=+null";
     
-            String bearerToken = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
+            String bearerToken = tokenManager.getNewAccessToken();
     
             String response = executeQuery(queryUrl, bearerToken);
     
@@ -608,13 +434,12 @@ public class ShowUsers extends Application {
 
     private static void mostrarMensajeError(String mensaje, Stage primaryStage) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
         alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-    
-    
 
     private static void filterUsers(String searchText) {
 

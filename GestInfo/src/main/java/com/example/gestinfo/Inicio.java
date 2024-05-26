@@ -25,17 +25,26 @@ import javafx.stage.Stage;
 
 public class Inicio extends Application {
 
+    //Generamos el access token en la clase SalesforceTokenManager
+    private SalesforceTokenManager tokenManager = new SalesforceTokenManager();
+
     // Variables para almacenar las credenciales y el resultado de la consulta
     private static String USERNAME;
     private static final String PASSWORD = "1";
 
-    // Bearer token de acceso a Salesforce
-    private static final String SALESFORCE_BEARER_TOKEN = "00DUB000001QzdZ!AQEAQPOPzHkrB8kg4rHy0nCbg4vIu.2c1SyaeU9w.SujprDPE6T_PqfIPIKf0VN3zZZmeJqorGRRNUfOkyzrECd8ZLJVvDj_";
+
+
 
     @Override
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
-        // Verificar la conexión a Salesforce y obtener el nombre de usuario
-        if (!verificarConexionSalesforce(SALESFORCE_BEARER_TOKEN)) {
+
+        String accessToken = tokenManager.getNewAccessToken();
+        if (accessToken == null) {
+            mostrarMensajeError("No se puede obtener el token de acceso.");
+            return;
+        }
+
+        if (!verificarConexionSalesforce(accessToken)) {
             mostrarMensajeError("No se puede conectar a Salesforce.");
             return;
         }
@@ -59,7 +68,7 @@ public class Inicio extends Application {
         Button accederButton = new Button("Acceder");
         accederButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-padding: 10 20; -fx-border-color: transparent; -fx-border-radius: 5;");
         accederButton.setOnAction(event -> {
-            
+
             String username = usernameField.getText();
             String password = passwordField.getText();
 
@@ -106,21 +115,14 @@ public class Inicio extends Application {
 
     // Método para verificar la conexión a Salesforce utilizando el token de acceso
     private boolean verificarConexionSalesforce(String accessToken) {
-        try {
-
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=SELECT+Alias+FROM+User+WHERE+Id='005So000000s4wHIAQ'");
-
             httpGet.addHeader("Authorization", "Bearer " + accessToken);
 
             HttpResponse response = httpClient.execute(httpGet);
-
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode >= 200 && statusCode < 300) {
-                
                 String responseBody = EntityUtils.toString(response.getEntity());
-                
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
                 USERNAME = jsonNode.get("records").get(0).get("Alias").asText();
