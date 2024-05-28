@@ -84,7 +84,6 @@ public class ShowCases {
         modifyStatusButton.setOnAction(event -> {
             CaseInfo selectedCase = caseTable.getSelectionModel().getSelectedItem();
             if (selectedCase != null) {
-                System.out.println("Caso seleccionado: " + selectedCase.getCaseId() + " - " + selectedCase.getSubject());
                 abrirModificarEstadoVentana(selectedCase);
             } else {
                 mostrarMensajeError("Por favor, selecciona un caso para modificar su estado.", caseStage);
