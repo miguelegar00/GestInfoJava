@@ -11,11 +11,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -56,18 +61,25 @@ public class SalesforceOAuth extends Application {
     @SuppressWarnings({ "unchecked", "exports" })
     @Override
     public void start(Stage primaryStage) {
-        // Configurar el layout principal
+
+        @SuppressWarnings("unused")
+        String username = System.getProperty("username__c");
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
     
-        // Crear el menú
         MenuBar menuBar = new MenuBar();
     
-        // Menú "Salir"
-        Menu salirMenu = new Menu("Salir");
+        Menu salirMenu = new Menu("Mi cuenta");
         MenuItem cerrarSesionItem = new MenuItem("Salir del programa");
         cerrarSesionItem.setOnAction(event -> cerrarSesion());
-        salirMenu.getItems().add(cerrarSesionItem);
+        MenuItem cambiarContrasenaItem = new MenuItem("Cambiar contraseña");
+        cambiarContrasenaItem.setOnAction(event -> {
+            try {
+                mostrarFormularioCambiarContrasena(tokenManager);
+            } catch (IOException e) {
+            }
+        });
+        salirMenu.getItems().addAll(cambiarContrasenaItem, cerrarSesionItem);
     
         // Menú "Nuevo" con submenú "Crear nueva cuenta"
         Menu nuevoMenu = new Menu("Nuevo");
@@ -89,45 +101,34 @@ public class SalesforceOAuth extends Application {
         });
         usuariosMenu.getItems().add(verUsuariosItem);
     
-        // Agregar los menús al MenuBar
         menuBar.getMenus().addAll(salirMenu, nuevoMenu, usuariosMenu);
     
-        // Configurar la parte superior del BorderPane con el menú
         root.setTop(menuBar);
 
-        // Crear el campo de búsqueda
         TextField searchField = new TextField();
         searchField.setPromptText("Buscar por nombre");
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterAccounts(newValue));
 
-        // Crear el botón de restablecer
         Button resetButton = new Button("Restablecer");
         resetButton.setOnAction(event -> {
-            // Limpiar el campo de búsqueda y restablecer la tabla
+            
             searchField.clear();
             executeAndDisplayResults();
         });
 
-        // Crear el contenedor para el campo de búsqueda y el botón de restablecer
-        // Crear el contenedor para el campo de búsqueda y el botón de restablecer
         HBox searchContainer = new HBox(10, searchField, resetButton);
         searchContainer.setPrefWidth(350);
         HBox.setHgrow(searchField, Priority.ALWAYS);
         searchContainer.setAlignment(Pos.CENTER);
-        searchContainer.setPadding(new Insets(0, 10, 10, 10)); // Establecer un margen izquierdo y derecho de 10 píxeles, y un margen inferior de 10 píxeles
+        searchContainer.setPadding(new Insets(0, 10, 10, 10));
 
-        // Agregar margen inferior al searchContainer
-        BorderPane.setMargin(searchContainer, new Insets(0, 0, 10, 0)); // Establecer un margen inferior de 10 píxeles
+        BorderPane.setMargin(searchContainer, new Insets(0, 0, 10, 0));
 
-
-        // Configurar la parte superior del BorderPane con el menú y el campo de búsqueda
         VBox topContainer = new VBox(menuBar, searchContainer);
         topContainer.setSpacing(10);
         topContainer.setAlignment(Pos.CENTER);
         root.setTop(topContainer);
 
-    
-        // Crear la tabla para mostrar los datos de las cuentas
         accountTable = new TableView<>();
         accountTable.setStyle("-fx-background-color: white;");
     
@@ -145,7 +146,6 @@ public class SalesforceOAuth extends Application {
     
         accountTable.getColumns().addAll(nameColumn, lastNameColumn, clienteDeColumn, phoneColumn);
     
-        // Configurar los botones en la parte inferior
         Button generarDoc = new Button("Generar Documentos");
         generarDoc.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
         generarDoc.setOnAction(event -> generarDocumento());
@@ -158,20 +158,120 @@ public class SalesforceOAuth extends Application {
         buttonBox.setSpacing(10);
         buttonBox.setAlignment(Pos.CENTER);
     
-        // Agregar la tabla y los botones al layout principal
         root.setCenter(accountTable);
         root.setBottom(buttonBox);
     
-        // Configurar la escena y mostrar la ventana
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setTitle("GestInfo");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
-        primaryStage.setMaximized(true); // Maximizar la ventana
+        primaryStage.setMaximized(true);
         primaryStage.show();
     
         executeAndDisplayResults();
     }
+    
+    private void mostrarFormularioCambiarContrasena(SalesforceTokenManager tokenManager) throws IOException {
+        String username = System.getProperty("username__c");
+        
+        if (username == null) {
+            mostrarMensajeError("No se ha encontrado el usuario. Inicie sesión nuevamente.");
+            return;
+        }
+        
+        Stage stage = new Stage();
+        stage.setTitle("Cambiar Contraseña");
+    
+        TextField newPasswordField = new TextField();
+        newPasswordField.setPromptText("Nueva Contraseña");
+    
+        TextField confirmPasswordField = new TextField();
+        confirmPasswordField.setPromptText("Confirmar Nueva Contraseña");
+    
+        Button cambiarButton = new Button("Cambiar");
+        cambiarButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
+        cambiarButton.setOnAction(event -> {
+            String newPassword = newPasswordField.getText();
+            String confirmPassword = confirmPasswordField.getText();
+    
+            if (!newPassword.equals(confirmPassword)) {
+                mostrarMensajeError("Las contraseñas no coinciden.");
+                return;
+            }
+    
+            String accessToken = tokenManager.getNewAccessToken();
+            if (accessToken == null) {
+                mostrarMensajeError("No se puede obtener el token de acceso.");
+                return;
+            }
+   
+            if (actualizarContrasena(accessToken, username, newPassword)) {
+                mostrarMensajeInformacion("Contraseña actualizada exitosamente.");
+                stage.close();
+            } else {
+                mostrarMensajeError("Error al actualizar la contraseña.");
+            }
+        });
+    
+        VBox vbox = new VBox(10, newPasswordField, confirmPasswordField, cambiarButton);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(25));
+    
+        Scene scene = new Scene(vbox, 400, 200);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private boolean actualizarContrasena(String accessToken, String username, String newPassword) {
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+        
+        String query = String.format("SELECT+Id+FROM+GestInfoUsers__c+WHERE+username__c='"+username+"'");
+        HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=" + query);
+        httpGet.addHeader("Authorization", "Bearer " + accessToken);
+
+        HttpResponse response = httpClient.execute(httpGet);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode >= 200 && statusCode < 300) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+            if (jsonNode.has("records") && jsonNode.get("records").size() > 0) {
+                JsonNode userRecord = jsonNode.get("records").get(0);
+                if (userRecord.has("Id")) {
+                    String userId = userRecord.get("Id").asText(); 
+
+                    String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/GestInfoUsers__c/" + userId;
+                    String data = "{\"password__c\": \"" + newPassword + "\"}";
+
+                    HttpPatch httpPatch = new HttpPatch(updateUrl);
+                    httpPatch.addHeader("Content-Type", "application/json");
+                    httpPatch.addHeader("Authorization", "Bearer " + accessToken);
+
+                    StringEntity entity = new StringEntity(data);
+                    httpPatch.setEntity(entity);
+
+                    HttpResponse updateResponse = httpClient.execute(httpPatch);
+                    int updateStatusCode = updateResponse.getStatusLine().getStatusCode();
+
+                    return (updateStatusCode == 200 || updateStatusCode == 204); // Código 204 indica éxito sin contenido
+                } else {
+                    mostrarMensajeError("No se encontró el ID del usuario.");
+                }
+            } else {
+                mostrarMensajeError("No se encontraron registros para los datos proporcionados.");
+            }
+        } else {
+            mostrarMensajeError("Error al consultar Salesforce. Código de estado: " + statusCode);
+        }
+        return false;
+    } catch (IOException e) {
+        e.printStackTrace();
+        mostrarMensajeError("Error al actualizar la contraseña: " + e.getMessage());
+        return false;
+    }
+}
+
     
     
 
@@ -237,6 +337,14 @@ public class SalesforceOAuth extends Application {
     private void mostrarMensajeError(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarMensajeInformacion(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
@@ -544,9 +652,6 @@ public class SalesforceOAuth extends Application {
 
 
     private void cerrarSesion() {
-        // Aquí podrías agregar la lógica para cerrar la sesión actual
-        System.out.println("Cerrando sesión...");
-        // Por ahora, simplemente cierra la aplicación
         System.exit(0);
     }
 

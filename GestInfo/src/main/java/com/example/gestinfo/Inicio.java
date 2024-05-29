@@ -1,7 +1,10 @@
 package com.example.gestinfo;
 
+import java.io.IOException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -27,8 +30,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Inicio extends Application {
 
@@ -124,35 +125,38 @@ public class Inicio extends Application {
             String query = String.format("SELECT+username__c,password__c,email__c+FROM+GestInfoUsers__c+WHERE+username__c='" + username + "'+AND+password__c='"+password+"'");
             HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=" + query);
             httpGet.addHeader("Authorization", "Bearer " + accessToken);
-
+    
             HttpResponse response = httpClient.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode >= 200 && statusCode < 300) {
                 String responseBody = EntityUtils.toString(response.getEntity());
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
-
+    
                 if (jsonNode.has("records") && jsonNode.get("records").size() > 0) {
                     JsonNode userRecord = jsonNode.get("records").get(0);
-                    if (userRecord.has("password__c")) {
+                    if (userRecord.has("password__c") && userRecord.has("username__c")) {
                         String storedPassword = userRecord.get("password__c").asText();
-                        return storedPassword.equals(password);
+                        if (storedPassword.equals(password)) {
+                            //Guardo el usuario en una variable de entorno para usarlo en la query de cambio de contraseña una vez que hemos iniciado sesión
+                            String storedUsername = userRecord.get("username__c").asText();
+                            System.setProperty("username__c", storedUsername);
+                            return true;
+                        } else {
+                        }
                     } else {
-                        System.err.println("password__c field is missing in the response");
                     }
                 } else {
-                    System.err.println("No records found or records field is missing in the response");
                 }
                 return false;
             } else {
-                System.err.println("Failed to query Salesforce, status code: " + statusCode);
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
+    
 
     private void mostrarFormularioCrearCuenta(String accessToken) {
         Stage stage = new Stage();
@@ -214,7 +218,6 @@ public class Inicio extends Application {
             String email = emailField.getText();
 
             if (recuperarContrasena(accessToken, username, email)) {
-                mostrarMensajeInformacion("Las instrucciones para recuperar la contraseña han sido enviadas a su email.");
                 stage.close();
             } else {
                 mostrarMensajeError("No se pudo recuperar la contraseña. Verifique los datos ingresados.");
@@ -232,32 +235,68 @@ public class Inicio extends Application {
 
     private boolean recuperarContrasena(String accessToken, String username, String email) {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            String query = String.format("SELECT+username__c,email__c,password__c+FROM+GestInfoUsers__c+WHERE+username__c='"+username+"'+AND+email__c='"+email+"'");
+            String query = String.format("SELECT+username__c,email__c,Id+FROM+GestInfoUsers__c+WHERE+username__c='%s'+AND+email__c='%s'", username, email);
             HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=" + query);
             httpGet.addHeader("Authorization", "Bearer " + accessToken);
-
+    
             HttpResponse response = httpClient.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode >= 200 && statusCode < 300) {
                 String responseBody = EntityUtils.toString(response.getEntity());
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
-
+    
                 if (jsonNode.has("records") && jsonNode.get("records").size() > 0) {
                     JsonNode userRecord = jsonNode.get("records").get(0);
-                    if (userRecord.has("email__c")) {
-                        // Logic to send email with password reset instructions
-                        // This part should contain your email-sending logic, for now we'll assume it succeeded
-                        return true;
+                    if (userRecord.has("Id")) {
+                        String userId = userRecord.get("Id").asText();
+                        String newPassword = "Soluciona1.";
+    
+                        // Se actualiza la contraseña en Salesforce
+                        if (actualizarContrasena(accessToken, userId, newPassword)) {
+                            mostrarMensajeInformacion("Su contraseña ha sido restablecida. Su nueva contraseña es: " + newPassword);
+                            return true;
+                        } else {
+                            mostrarMensajeError("Error al actualizar la contraseña en Salesforce.");
+                        }
                     } else {
+                        mostrarMensajeError("No se encontró el ID del usuario.");
                     }
                 } else {
+                    mostrarMensajeError("No se encontraron registros para los datos proporcionados.");
                 }
                 return false;
             } else {
+                mostrarMensajeError("Error al consultar Salesforce. Código de estado: " + statusCode);
                 return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            mostrarMensajeError("Error al recuperar la contraseña: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    private boolean actualizarContrasena(String accessToken, String userId, String newPassword) {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/GestInfoUsers__c/" + userId;
+    
+            String data = "{\"password__c\": \"" + newPassword + "\"}";
+    
+            HttpPatch httpPatch = new HttpPatch(updateUrl);
+            httpPatch.addHeader("Content-Type", "application/json");
+            httpPatch.addHeader("Authorization", "Bearer " + accessToken);
+    
+            StringEntity entity = new StringEntity(data);
+            httpPatch.setEntity(entity);
+    
+            HttpResponse response = httpClient.execute(httpPatch);
+            int statusCode = response.getStatusLine().getStatusCode();
+    
+            return (statusCode == 200 || statusCode == 204);
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarMensajeError("Error al actualizar la contraseña: " + e.getMessage());
             return false;
         }
     }
@@ -275,7 +314,7 @@ public class Inicio extends Application {
             int statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200 || statusCode == 201) {
-                // La operación POST se realizó correctamente
+                
             } else {
                 throw new IOException("Error al crear la cuenta. Código de respuesta HTTP: " + statusCode);
             }
