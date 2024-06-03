@@ -113,7 +113,7 @@ public class Inicio extends Application {
 
         Scene scene = new Scene(root, 400, 500);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Soluciona Mi Deuda");
+        primaryStage.setTitle("GestInfo");
 
         primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
 

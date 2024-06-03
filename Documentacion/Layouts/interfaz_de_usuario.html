@@ -16,7 +16,6 @@
         }
 
         footer {
-            position: fixed;
             left: 0;
             bottom: 0;
             width: 100%;
@@ -27,6 +26,12 @@
 
         .container {
             margin-top: 20px;
+            flex: 1;
+        }
+
+        .row {
+            margin-top: 20px;
+            margin-bottom: 20px;
             flex: 1;
         }
 
@@ -44,6 +49,13 @@
         .navbar-nav {
             align-items: center;
         }
+
+        .containerImg img {
+            max-width: 90%;
+            height: auto;
+            margin-left: 10px;
+        }
+        
 
         .salesforce-logo {
             position: absolute;
@@ -117,8 +129,76 @@
             </div>
         </div>
     </nav>
-    <div class="container">
-        <p>La interfaz de usuario de GestInfo está diseñada para ser intuitiva y fácil de usar. Ofrece un diseño limpio y funcionalidades claras para facilitar la navegación y el uso de la aplicación. Se proporciona un manual de usuario detallado para ayudar a los usuarios a familiarizarse con la aplicación.</p>
+    <div class="containerImg" style="margin-left: 20px;">
+        <p style="text-align: center;margin-top: 10px">La interfaz de usuario de GestInfo está diseñada para ser intuitiva y fácil de usar. Ofrece un diseño limpio y funcionalidades claras para facilitar la navegación y el uso de la aplicación. Se proporciona un manual de usuario detallado para ayudar a los usuarios a familiarizarse con la aplicación.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-3 text-center">
+                <p style="font-weight: bold;">Login</p>
+                <img src="../Resources/login.png" alt="login" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-center">
+                <p style="font-weight: bold;">Crear cuenta de Login</p>
+                <img src="../Resources/createLogin.png" alt="createLogin" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-center">
+                <p style="font-weight: bold;">Recuperar contraseña de Login</p>
+                <img src="../Resources/resetPassword.png" alt="resetPassword" class="img-fluid">
+            </div>
+        </div>        
+        <div class="row">
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Listado de las cuentas de los clientes</p>
+                <img src="../Resources/showAccounts.png" alt="showAccounts" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Editar cuenta de un cliente</p>
+                <img src="../Resources/editAccount.png" alt="editAccount" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Crear cuenta de cliente</p>
+                <img src="../Resources/createAccount.png" alt="createAccount" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Generación de documentos de un cliente</p>
+                <img src="../Resources/generateDocument.png" alt="generateDocument" class="img-fluid">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Cambio de Username de la cuenta de Login</p>
+                <img src="../Resources/changeUsername.png" alt="changeUsername" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Cambio de contraseña de la cuenta de Login</p>
+                <img src="../Resources/changePassword.png" alt="changePassword" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Listado de todos los usuarios (trabajadores)</p>
+                <img src="../Resources/showUsers.png" alt="showUsers" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Activación de un usuario (trabajadores)</p>
+                <img src="../Resources/activateUser.png" alt="activateUser" class="img-fluid">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Editar un usuario (trabajadores)</p>
+                <img src="../Resources/editUser.png" alt="editUser" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Desactivación de un usuario (trabajadores)</p>
+                <img src="../Resources/desactivateUser.png" alt="desactivateUser" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Listado de los casos asignados a un usuario (trabajadores)</p>
+                <img src="../Resources/showCases.png" alt="showCases" class="img-fluid">
+            </div>
+            <div class="col-md-3">
+                <p style="font-weight: bold;text-align:center">Modificación de estado de un caso asignado a un usuario (trabajadores)</p>
+                <img src="../Resources/updateStatus.png" alt="updateStatus" class="img-fluid">
+            </div>
+        </div>
     </div>
     <footer>
         <div class="container">
