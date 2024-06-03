@@ -1,16 +1,16 @@
 package com.example.gestinfo;
 
-import java.io.IOException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.example.gestinfo.AccountActions.ShowAccounts;
+import com.example.gestinfo.GenericActions.SalesforceTokenManager;
+import com.example.gestinfo.GenericActions.ShowMessages;
+import com.example.gestinfo.LoginAccountsActions.CreateLoginAccount;
+import com.example.gestinfo.LoginAccountsActions.ResetPassword;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,7 +18,6 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -31,17 +30,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
 public class Inicio extends Application {
 
     private SalesforceTokenManager tokenManager = new SalesforceTokenManager();
 
-    @SuppressWarnings("exports")
+    @SuppressWarnings({ "exports", "static-access" })
     @Override
     public void start(Stage primaryStage) {
 
         String accessToken = tokenManager.getNewAccessToken();
         if (accessToken == null) {
-            mostrarMensajeError("No se puede obtener el token de acceso.");
+            ShowMessages.mostrarMensajeError("No se puede obtener el token de acceso.");
             return;
         }
 
@@ -63,7 +63,7 @@ public class Inicio extends Application {
             String password = passwordField.getText();
 
             if (verificarConexionSalesforce(accessToken, username, password)) {
-                SalesforceOAuth salesforceOAuth = new SalesforceOAuth();
+                ShowAccounts salesforceOAuth = new ShowAccounts();
                 try {
                     salesforceOAuth.start(new Stage());
                     primaryStage.close();
@@ -71,20 +71,20 @@ public class Inicio extends Application {
                     e.printStackTrace();
                 }
             } else {
-                mostrarMensajeError("Credenciales incorrectas.");
+                ShowMessages.mostrarMensajeError("Credenciales incorrectas.");
             }
         });
 
         Label crearCuentaLabel = new Label("Crear cuenta");
         crearCuentaLabel.setStyle("-fx-text-fill: blue; -fx-underline: true; -fx-font-family: 'Arial'; -fx-font-size: 14px;");
         crearCuentaLabel.setOnMouseClicked(event -> {
-            mostrarFormularioCrearCuenta(accessToken);
+            CreateLoginAccount.mostrarFormularioCrearCuenta(accessToken);
         });
 
         Label olvidasteContrasenaLabel = new Label("Olvidaste tu contraseña");
         olvidasteContrasenaLabel.setStyle("-fx-text-fill: blue; -fx-underline: true; -fx-font-family: 'Arial'; -fx-font-size: 14px;");
         olvidasteContrasenaLabel.setOnMouseClicked(event -> {
-            mostrarFormularioOlvidasteContrasena(accessToken);
+            ResetPassword.mostrarFormularioOlvidasteContrasena(accessToken);
         });
 
         GridPane loginGrid = new GridPane();
@@ -122,7 +122,7 @@ public class Inicio extends Application {
 
     private boolean verificarConexionSalesforce(String accessToken, String username, String password) {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            String query = String.format("SELECT+username__c,password__c,email__c+FROM+GestInfoUsers__c+WHERE+username__c='" + username + "'+AND+password__c='"+password+"'");
+            String query = String.format("SELECT+Name,password__c,email__c+FROM+GestInfoUsers__c+WHERE+Name='" + username + "'+AND+password__c='"+password+"'");
             HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=" + query);
             httpGet.addHeader("Authorization", "Bearer " + accessToken);
     
@@ -135,12 +135,12 @@ public class Inicio extends Application {
     
                 if (jsonNode.has("records") && jsonNode.get("records").size() > 0) {
                     JsonNode userRecord = jsonNode.get("records").get(0);
-                    if (userRecord.has("password__c") && userRecord.has("username__c")) {
+                    if (userRecord.has("password__c") && userRecord.has("Name")) {
                         String storedPassword = userRecord.get("password__c").asText();
                         if (storedPassword.equals(password)) {
                             //Guardo el usuario en una variable de entorno para usarlo en la query de cambio de contraseña una vez que hemos iniciado sesión
-                            String storedUsername = userRecord.get("username__c").asText();
-                            System.setProperty("username__c", storedUsername);
+                            String storedUsername = userRecord.get("Name").asText();
+                            System.setProperty("Name", storedUsername);
                             return true;
                         } else {
                         }
@@ -155,186 +155,6 @@ public class Inicio extends Application {
         } catch (Exception e) {
             return false;
         }
-    }
-    
-
-    private void mostrarFormularioCrearCuenta(String accessToken) {
-        Stage stage = new Stage();
-        stage.setTitle("Crear Cuenta");
-
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
-        TextField emailField = new TextField();
-        emailField.setPromptText("Email");
-        TextField passwordField = new TextField();
-        passwordField.setPromptText("Password");
-
-        Button crearButton = new Button("Crear");
-        crearButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
-        crearButton.setOnAction(event -> {
-            String username = usernameField.getText();
-            String email = emailField.getText();
-            String password = passwordField.getText();
-
-            try {
-                String createUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/GestInfoUsers__c/";
-
-                String data = "{\"username__c\": \"" + username + "\", " +
-                        "\"email__c\": \"" + email + "\"," +
-                        "\"password__c\": \"" + password + "\"}";
-
-                executePostRequest(createUrl, data, accessToken);
-                mostrarMensajeInformacion("Cuenta creada exitosamente.");
-                stage.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                mostrarMensajeError("Error al crear la cuenta: " + e.getMessage());
-            }
-        });
-
-        VBox vbox = new VBox(10, usernameField, emailField, passwordField, crearButton);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(25));
-
-        Scene scene = new Scene(vbox, 400, 200);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    private void mostrarFormularioOlvidasteContrasena(String accessToken) {
-        Stage stage = new Stage();
-        stage.setTitle("Recuperar Contraseña");
-
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
-        TextField emailField = new TextField();
-        emailField.setPromptText("Email");
-
-        Button recuperarButton = new Button("Recuperar");
-        recuperarButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white;");
-        recuperarButton.setOnAction(event -> {
-            String username = usernameField.getText();
-            String email = emailField.getText();
-
-            if (recuperarContrasena(accessToken, username, email)) {
-                stage.close();
-            } else {
-                mostrarMensajeError("No se pudo recuperar la contraseña. Verifique los datos ingresados.");
-            }
-        });
-
-        VBox vbox = new VBox(10, usernameField, emailField, recuperarButton);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(25));
-
-        Scene scene = new Scene(vbox, 400, 200);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    private boolean recuperarContrasena(String accessToken, String username, String email) {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            String query = String.format("SELECT+username__c,email__c,Id+FROM+GestInfoUsers__c+WHERE+username__c='%s'+AND+email__c='%s'", username, email);
-            HttpGet httpGet = new HttpGet("https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query?q=" + query);
-            httpGet.addHeader("Authorization", "Bearer " + accessToken);
-    
-            HttpResponse response = httpClient.execute(httpGet);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 200 && statusCode < 300) {
-                String responseBody = EntityUtils.toString(response.getEntity());
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-    
-                if (jsonNode.has("records") && jsonNode.get("records").size() > 0) {
-                    JsonNode userRecord = jsonNode.get("records").get(0);
-                    if (userRecord.has("Id")) {
-                        String userId = userRecord.get("Id").asText();
-                        String newPassword = "Soluciona1.";
-    
-                        // Se actualiza la contraseña en Salesforce
-                        if (actualizarContrasena(accessToken, userId, newPassword)) {
-                            mostrarMensajeInformacion("Su contraseña ha sido restablecida. Su nueva contraseña es: " + newPassword);
-                            return true;
-                        } else {
-                            mostrarMensajeError("Error al actualizar la contraseña en Salesforce.");
-                        }
-                    } else {
-                        mostrarMensajeError("No se encontró el ID del usuario.");
-                    }
-                } else {
-                    mostrarMensajeError("No se encontraron registros para los datos proporcionados.");
-                }
-                return false;
-            } else {
-                mostrarMensajeError("Error al consultar Salesforce. Código de estado: " + statusCode);
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarMensajeError("Error al recuperar la contraseña: " + e.getMessage());
-            return false;
-        }
-    }
-    
-    private boolean actualizarContrasena(String accessToken, String userId, String newPassword) {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            String updateUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/GestInfoUsers__c/" + userId;
-    
-            String data = "{\"password__c\": \"" + newPassword + "\"}";
-    
-            HttpPatch httpPatch = new HttpPatch(updateUrl);
-            httpPatch.addHeader("Content-Type", "application/json");
-            httpPatch.addHeader("Authorization", "Bearer " + accessToken);
-    
-            StringEntity entity = new StringEntity(data);
-            httpPatch.setEntity(entity);
-    
-            HttpResponse response = httpClient.execute(httpPatch);
-            int statusCode = response.getStatusLine().getStatusCode();
-    
-            return (statusCode == 200 || statusCode == 204);
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarMensajeError("Error al actualizar la contraseña: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public void executePostRequest(String url, String data, String accessToken) throws IOException {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.addHeader("Content-Type", "application/json");
-            httpPost.addHeader("Authorization", "Bearer " + accessToken);
-
-            StringEntity entity = new StringEntity(data);
-            httpPost.setEntity(entity);
-
-            HttpResponse response = httpClient.execute(httpPost);
-            int statusCode = response.getStatusLine().getStatusCode();
-
-            if (statusCode == 200 || statusCode == 201) {
-                
-            } else {
-                throw new IOException("Error al crear la cuenta. Código de respuesta HTTP: " + statusCode);
-            }
-        }
-    }
-
-    private void mostrarMensajeError(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    private void mostrarMensajeInformacion(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Información");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
     }
 
     public static void main(String[] args) {

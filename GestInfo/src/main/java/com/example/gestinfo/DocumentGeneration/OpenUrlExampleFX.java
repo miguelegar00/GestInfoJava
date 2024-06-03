@@ -1,4 +1,4 @@
-package com.example.gestinfo;
+package com.example.gestinfo.DocumentGeneration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +13,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ *
+ * @author Miguel
+ */
 public class OpenUrlExampleFX extends Application {
 
     private Map<String, String> urlMap;
@@ -31,11 +35,10 @@ public class OpenUrlExampleFX extends Application {
     }
 
     @Override
-    @SuppressWarnings("exports")
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Generador de Documentos");
 
-        // Define los nombres de ejemplo y los enlaces correspondientes
+        // Define los nombres de los documentos y los enlaces de cada uno 
         urlMap = new HashMap<>();
         urlMap.put("Solicitud Concurso Con Masa", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoConMasa?id=" + this.accountId);
         urlMap.put("Solicitud Concurso Sin Masa", "https://solucionamideuda--devmiguel--c.sandbox.vf.force.com/apex/SolicitudConcursoSinMasa?id=" + this.accountId);
@@ -48,7 +51,7 @@ public class OpenUrlExampleFX extends Application {
         pickList.setItems(FXCollections.observableArrayList(urlMap.keySet()));
         pickList.setPromptText("Seleccione una opción");
 
-        // Configura el botón de generación
+        // Configura el botón de generación de los documentos
         Button generateButton = new Button("Generar documento");
         generateButton.setOnAction(event -> {
             String selectedExample = pickList.getValue();

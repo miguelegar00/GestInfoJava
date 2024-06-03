@@ -3,10 +3,6 @@ package com.example.gestinfo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +13,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import com.example.gestinfo.ShowUsers.User;
+import com.example.gestinfo.GenericActions.SalesforceActions;
+import com.example.gestinfo.GenericActions.SalesforceTokenManager;
+import com.example.gestinfo.GenericActions.ShowMessages;
+import com.example.gestinfo.UsersActions.ShowUsers.User;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -33,7 +32,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,10 +42,11 @@ import javafx.stage.Stage;
  */
 public class ShowCases {
 
+    @SuppressWarnings("unused")
     private SalesforceTokenManager tokenManager = new SalesforceTokenManager();
 
     @SuppressWarnings("unchecked")
-    public void abrirVentanaCasos(User selectedUser) {
+    public static void abrirVentanaCasos(@SuppressWarnings("exports") User selectedUser) {
         Stage caseStage = new Stage();
         caseStage.initModality(Modality.APPLICATION_MODAL);
         caseStage.setTitle("Casos de " + selectedUser.getFirstName() + " " + selectedUser.getLastName());
@@ -63,21 +62,21 @@ public class ShowCases {
 
         try {
             String queryUrl = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/query/?q=SELECT+Id,Subject,Status+FROM+Case+WHERE+OwnerId='" + selectedUser.getId() + "'";
-            String bearerToken = tokenManager.getNewAccessToken();
-            String response = executeQuery(queryUrl, bearerToken);
+            String bearerToken = SalesforceTokenManager.getNewAccessToken();
+            String response = SalesforceActions.executeQuery(queryUrl, bearerToken);
 
             ObservableList<CaseInfo> caseList = FXCollections.observableArrayList();
             Pattern pattern = Pattern.compile("\"Id\"\\s*:\\s*\"(\\w+)\".*?\"Subject\"\\s*:\\s*\"(.*?)\".*?\"Status\"\\s*:\\s*\"(.*?)\"");
             Matcher matcher = pattern.matcher(response);
             while (matcher.find()) {
                 String id = matcher.group(1);
-                String subject = decodeString(matcher.group(2));
-                String stage = decodeString(matcher.group(3));
+                String subject = SalesforceActions.decodeString(matcher.group(2));
+                String stage = SalesforceActions.decodeString(matcher.group(3));
                 caseList.add(new CaseInfo(id, subject, stage));
             }
             caseTable.setItems(caseList);
         } catch (IOException e) {
-            mostrarMensajeError("Error al obtener los casos del usuario.", caseStage);
+            ShowMessages.mostrarMensajeError("Error al obtener los casos del usuario.");
         }
         Button modifyStatusButton = new Button("Modificar Estado");
         modifyStatusButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
@@ -86,7 +85,7 @@ public class ShowCases {
             if (selectedCase != null) {
                 abrirModificarEstadoVentana(selectedCase);
             } else {
-                mostrarMensajeError("Por favor, selecciona un caso para modificar su estado.", caseStage);
+                ShowMessages.mostrarMensajeError("Por favor, selecciona un caso para modificar su estado.");
             }
         });
 
@@ -100,9 +99,9 @@ public class ShowCases {
         caseStage.showAndWait();
     }
 
-    private void actualizarEstadoCaso(CaseInfo selectedCase, String newStatus) throws IOException {
+    private static void actualizarEstadoCaso(CaseInfo selectedCase, String newStatus) throws IOException {
         String url = "https://solucionamideuda--devmiguel.sandbox.my.salesforce.com/services/data/v60.0/sobjects/Case/" + selectedCase.getCaseId();
-        String bearerToken = tokenManager.getNewAccessToken();
+        String bearerToken = SalesforceTokenManager.getNewAccessToken();
         String data = "{\"Status\": \"" + newStatus + "\"}";
     
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -130,46 +129,7 @@ public class ShowCases {
         }
     }
 
-    private static String executeQuery(String url, String bearerToken) throws IOException {
-        URL queryUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
-        connection.setRequestMethod("GET");
-
-        connection.setRequestProperty("Authorization", "Bearer " + bearerToken);
-
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
-                StringBuilder response = new StringBuilder();
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                return response.toString();
-            }
-        } else {
-            throw new IOException("HTTP error code: " + responseCode);
-        }
-    }
-
-    private static String decodeString(String encodedString) {
-        try {
-            return java.net.URLDecoder.decode(encodedString, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return encodedString;
-        }
-    }
-
-    private static void mostrarMensajeError(String mensaje, Stage primaryStage) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        primaryStage.getIcons().add(new Image("https://parsers.vc/logo/c8924191-7868-46a7-ac6b-83be877cf3fe-3.png"));
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    private void abrirModificarEstadoVentana(CaseInfo selectedCase) {
+    private static void abrirModificarEstadoVentana(CaseInfo selectedCase) {
         Stage modifyStage = new Stage();
         modifyStage.initModality(Modality.APPLICATION_MODAL);
         modifyStage.setTitle("Modificar estado del caso");
@@ -198,11 +158,11 @@ public class ShowCases {
                         selectedCase.setStage(newStatus);
                         modifyStage.close();
                     } catch (IOException e) {
-                        mostrarMensajeError("Error al actualizar el estado del caso: " + e.getMessage(), modifyStage);
+                        ShowMessages.mostrarMensajeError("Error al actualizar el estado del caso: " + e.getMessage());
                     }
                 }
             } else {
-                mostrarMensajeError("Seleccione un estado válido.", modifyStage);
+                ShowMessages.mostrarMensajeError("Seleccione un estado válido.");
             }
         });
     

@@ -1,7 +1,11 @@
-package com.example.gestinfo;
+package com.example.gestinfo.DocumentGeneration;
 
 import java.io.IOException;
 
+/**
+ *
+ * @author Miguel
+ */
 public class OpenUrlExample {
 
     public static void main(String[] args) {

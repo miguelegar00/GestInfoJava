@@ -9,7 +9,6 @@ module com.example.gestinfo {
     requires org.apache.httpcomponents.httpclient;
     requires org.apache.httpcomponents.httpcore;
     requires com.fasterxml.jackson.databind;
-    requires force.wsc;
     requires java.net.http;
     requires javafx.graphics;
     opens com.example.gestinfo to javafx.fxml;
