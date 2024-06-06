@@ -142,7 +142,7 @@ public class ResetPassword {
         String userId = getUserId(accessToken);
     
         if (userId == null) {
-            ShowMessages.mostrarMensajeError("No se ha encontrado el usuario. Inicie sesión nuevamente.");
+            ShowMessages.mostrarMensajeError("Para poder cambiar la contraseña, ejecute nuevamente el programa, ya que usted cambió anteriormente el nombre de usuario.");
             return;
         }
     
